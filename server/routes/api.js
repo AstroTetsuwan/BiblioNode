@@ -1,12 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var bookAPI = require('./api/book');
 
-var Employe = require('../domain/Employe');
-
-router.get('/user', function(req, res, next) {
-    var u = new Employe("joe", "jonas",  new Date(), 'M', 15, "n", "uuu ", "e", "002", "bibliothecaire");
-    res.json({ data: u });
-});
+router.use('/book', bookAPI);
 
 
 module.exports = router;

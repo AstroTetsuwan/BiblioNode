@@ -11,7 +11,7 @@ router.get('/', (req, res, next) => {
     .then((result) => {
         res.json({data: "Page avec les deux boutons qui mennent à l'interface adhérent ou employé !", result: result[0].nom_editeur});
     }).catch((err) => {
-        console.log("dbErr: " + err);
+        console.log(err);
     });
     
 });

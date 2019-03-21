@@ -7,13 +7,27 @@ var EditeurDAO = require('../dao/EditeurDAO');
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-    EditeurDAO.findAllEditeur()
-    .then((result) => {
-        res.json({data: "Page avec les deux boutons qui mennent à l'interface adhérent ou employé !", result: result[0].nom_editeur});
-    }).catch((err) => {
-        console.log(err);
-    });
     
+    /*NOPROMISES  
+    
+    let results = []; 
+    EditeurDAO.findAllEditeur((err, result) => {
+        if(err) console.log(err);
+        results.push(result);
+        EditeurDAO.findEditeurById(1, (err, result) => {
+            if(err) console.log(err);
+            results.push(result);
+            res.json({data: "Page avec les deux boutons qui mennent à l'interface adhérent ou employé !", result: results});
+        });
+    });
+    */
+    
+    EditeurDAO.findEditeurById(1)
+    .then((result) => { 
+        res.json({data: result});
+    })
+    .catch((error) => { console.log(error); }); 
+
 });
 
 

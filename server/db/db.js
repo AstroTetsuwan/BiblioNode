@@ -14,8 +14,6 @@ module.exports = {
             });
 
             //allow use of async await for pool.query
-            console.log("POOL");
-            console.log(pool);
             pool.query = util.promisify(pool.query);
         }
 

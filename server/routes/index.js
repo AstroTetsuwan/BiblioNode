@@ -21,15 +21,14 @@ router.get('/', (req, res, next) => {
         });
     });
     */
-    
+    /*WITH PROMISES
     EditeurDAO.findEditeurById(1)
     .then((result) => { 
         res.json({data: result});
     })
     .catch((error) => { console.log(error); }); 
-
+    */
 });
-
 
 router.get('/adherent', (req, res, next) => {
     res.json({data: "Page qui sert l'app React adhérent!"});
@@ -40,8 +39,6 @@ router.get('/employe', (req, res, next) => {
 });
 
 router.use('/api', apiRouter);
-
-
 
 
 module.exports = router;

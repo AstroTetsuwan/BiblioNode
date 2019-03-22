@@ -7,7 +7,7 @@ var EditeurDAO = {
         return await pool.query("SELECT * from editeur");        
     },
 
-    findEditeurById: async function(id, next){
+    findEditeurById: async function(id){
         let queryParams = {id_editeur: id};
         return await pool.query('SELECT * FROM editeur WHERE ?', queryParams);
     }

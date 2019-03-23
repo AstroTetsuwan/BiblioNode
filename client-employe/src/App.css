@@ -3,3 +3,7 @@
   min-height: 100vh;
   font-family: 'Roboto', sans-serif;
 }
+
+li{
+  list-style-type: none;
+}

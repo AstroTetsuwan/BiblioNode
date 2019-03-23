@@ -1,0 +1,17 @@
+nav{
+    min-height: 10vh;
+    max-height: 10vh;
+}
+
+nav p{
+    padding: 1vh;
+    font-size: 1.2em;
+}
+
+#nav-links-wrapper{
+    display: flex;
+    justify-content: space-around;
+}
+#nav-links-wrapper a{
+    text-decoration: none;
+}

@@ -1,0 +1,42 @@
+.drop-down-section{
+    position: relative;
+}
+.drop-down-section ul{
+  padding: 0;
+}
+
+.drop-down-section a{font-size: 2.2em;}
+/* the top a get border-bottom others don't cause they will have it on their li parent*/
+.drop-down-section a, .drop-down-section ul li{
+  text-align: center;
+  border-bottom: 1px solid #444;
+}
+.drop-down-section ul a{
+  border: none;
+  font-size: 1.2em;
+}
+
+
+.drop-down-sub-list-hidden{
+  visibility: hidden; /* hides sub-menu */
+  opacity: 0;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  transform: translateY(-2em);
+  z-index: -1;
+  transition: all 0.3s ease-in-out 0s, visibility 0s linear 0.3s, z-index 0s linear 0.01s;
+}
+
+.drop-down-sub-list-visible {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  visibility: visible; /* shows sub-menu */
+  opacity: 1;
+  z-index: 1;
+  transform: translateY(0%);
+  transition-delay: 0s, 0s, 0.3s; /* this removes the transition delay so the menu will be visible while the other styles transition */
+}

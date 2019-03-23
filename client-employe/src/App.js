@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 import './App.css';
 
@@ -14,6 +15,24 @@ class App extends Component {
     };
 
     this.handleLogin = this.handleLogin.bind(this);
+  }
+
+  componentDidMount(){
+    this.isUserLoggedIn();
+  }
+
+  isUserLoggedIn(){
+    axios.get('/api/employe/getLoggedUser')
+    .then((response) => {
+      let user = response.data;
+      if(user.categorieUtilisateur === "EMPLOYE"){
+        this.setState({user: user});
+      }
+    })
+    .catch((err) => {
+      console.log("FAILURE loggedin REQUEST");
+      console.log(err.response); 
+    });
   }
 
   handleLogin(user){

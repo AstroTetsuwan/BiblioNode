@@ -11,7 +11,6 @@ passport.use(new LocalStrategy(
             console.log('USER')
             console.log(user);
             if(user === null){
-                //PASS HERE THEN ERROR HEADERS ALREADY SET
                 return next(null, false, {message : "Ce nom d'utilisateur n'existe pas." }) ;
             }
             //encrypt password
@@ -23,7 +22,7 @@ passport.use(new LocalStrategy(
             return next(null, user);
         })
         .catch((err) => {
-            console.log("passport err");
+            console.log("Passport error:");
             console.log(err);
             return next(err);
         });
@@ -38,11 +37,8 @@ passport.use(new LocalStrategy(
 // serializing, and querying the user record by ID from the database when
 // deserializing.
 passport.serializeUser(function(user, cb) {
-    console.log("USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER ");
-    console.log(user);
-    console.log("USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER USER ");
     cb(null, user.id);
-  });
+});
   
 passport.deserializeUser(function(id, cb) {
     UtilisateurDAO.findById(id)

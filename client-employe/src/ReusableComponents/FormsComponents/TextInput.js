@@ -1,25 +1,24 @@
 import React, { Component } from 'react';
 
-class TextField extends React.Component {
+class TextInput extends React.Component {
     constructor(props){
         super(props);
         this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange(e){
-        let textFieldValue = e.target.value;
-        this.props.onChange(this.props.id, textFieldValue);
+        this.props.onChange(this.props.id, e.target.value);
     }
 
     render(){
         return(
-            <div className="form-group">
+            <div className={"form-group " + (this.props.col || "") }>
                 <label htmlFor={this.props.id}>{this.props.name}</label>
                 <input type={this.props.type} name={this.props.id} className="form-control" required={this.props.required}
-                id={this.props.id} placeholder={this.props.name} value={this.props.value} onChange={this.handleChange}/>
+                id={this.props.id} placeholder={this.props.placeholder || this.props.name} value={this.props.value} onChange={this.handleChange}/>
             </div>
         );
     }
 }
 
-export default TextField;
+export default TextInput;

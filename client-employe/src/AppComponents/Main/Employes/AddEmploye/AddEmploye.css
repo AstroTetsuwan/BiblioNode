@@ -1,0 +1,19 @@
+#add-employe-wrapper{
+    padding: 0 2em;
+}
+#add-employe-wrapper h3 {
+    margin-bottom: 5vh; 
+}
+
+#add-employe-form-wrapper{
+    display: flex;
+    flex-direction: column;
+}
+
+#add-employe-form div{
+    margin-bottom: 5vh;
+}
+
+#add-employe-form-button-wrapper{
+    text-align: center;
+}

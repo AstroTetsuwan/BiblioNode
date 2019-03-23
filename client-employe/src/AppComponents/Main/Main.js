@@ -1,14 +1,33 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+
+import Nav from './Nav/Nav';
+import Home from './Home/Home';
+
+import AddEmploye from './Employes/AddEmploye/AddEmploye';
+
+import './Main.css';
 
 class Main extends React.Component{
     constructor(props){
         super(props);
     }
 
+
     render(){
         return(
-            <div><h1>Welcome to the main my friend...</h1></div>
+            <BrowserRouter>    
+                <div id="global-wrapper">
+                    <Nav user={this.props.user}/>
+                    <div id="main-wrapper">
+                        <Switch>
+                            <Route exact path="/" component={Home}/>
+
+                            <Route path="/employe/add" component={AddEmploye}/>
+                        </Switch>
+                    </div>
+                </div>
+            </BrowserRouter>
         );
     }
 }

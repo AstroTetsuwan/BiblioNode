@@ -1,8 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 
-import SubmitButton from '../../FormsComponents/SubmitButton';
-import TextField from '../../FormsComponents/TextField';
+import SubmitButton from '../../ReusableComponents/FormsComponents/SubmitButton';
+import TextInput from '../../ReusableComponents/FormsComponents/TextInput';
 
 import './Login.css'
 
@@ -27,15 +27,14 @@ class Login extends React.Component{
     }
 
     handleSubmit(e){
-        axios.post('/api/employe/auth',{
+        axios.post('/api/employe/login',{
             username: this.state.username,
             password: this.state.password
         })
         .then((response) => {
-            let user = response.data.user;
-            if(user.categorieUtilisateur === "EMPLOYE"){
-                this.props.handleLogin(user);
-            }
+            let user = response.data;
+            if(user.categorieUtilisateur === "EMPLOYE"){ this.props.handleLogin(user); }
+            else{ this.setErrorMessage("Cet utilisateur n'est pas autorisé."); }
         })
         .catch((err) => {
             if(err.response.data.error){  this.setErrorMessage(err.response.data.error);  }
@@ -62,8 +61,8 @@ class Login extends React.Component{
                 }
 
                 <form onSubmit={this.handleSubmit} id="login-form">
-                    <TextField id="username" name="Pseudo" type="text" onChange={this.handleChange} value={this.state.username} required="required"/>                    
-                    <TextField id="password" name="Mot de Passe" type="password" onChange={this.handleChange}  value={this.state.password} required="required"/>
+                    <TextInput id="username" name="Pseudo" type="text" onChange={this.handleChange} value={this.state.username} required="required"/>                    
+                    <TextInput id="password" name="Mot de Passe" type="password" onChange={this.handleChange}  value={this.state.password} required="required"/>
                     <div id="login-form-button-wrapper"><SubmitButton name="Log in"/></div>
                 </form>
             </div> 

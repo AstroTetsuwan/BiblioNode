@@ -1,0 +1,24 @@
+#login-wrapper{
+    min-width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#login-title{
+    margin-top: -20%;
+    padding-bottom: 10%;
+}
+
+
+#login-form{
+    max-width: 33%;
+}
+
+
+#login-form-button-wrapper{
+    text-align: center;
+}

@@ -5,7 +5,7 @@ class Utilisateur extends Personne{
         super(nom, prenom, dob, sexe);
         this.id = id;
         this.pseudo = pseudo;
-        this.pwd = pwd;
+        this.password = pwd;
         this.categorieUtilisateur = categorieUtilisateur;
     }
 

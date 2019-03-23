@@ -2,7 +2,7 @@ CREATE TABLE utilisateur (
 	id_utilisateur INT PRIMARY KEY AUTO_INCREMENT,
 	nom VARCHAR(40) NOT NULL,
 	prenom VARCHAR(40) NOT NULL,
-	pwd VARCHAR(15) NOT NULL,
+	pwd VARCHAR(100) NOT NULL,
 	pseudonyme VARCHAR(20) not null UNIQUE,
 	date_naissance date not null,
 	sexe VARCHAR(1) not null CHECK (sexe in ('H' , 'F')),
@@ -53,6 +53,7 @@ CREATE TABLE livre (
 	code_theme VARCHAR(2) NOT NULL,
 	annee_parution SMALLINT NOT NULL CHECK (annee_parution > 0),
 	nb_pages SMALLINT NOT NULL CHECK (nb_pages >=0),
+	cover_image VARCHAR(50),
     FOREIGN KEY (id_editeur) REFERENCES editeur(id_editeur) ,
     FOREIGN KEY (code_theme) REFERENCES theme(code_theme)
 );

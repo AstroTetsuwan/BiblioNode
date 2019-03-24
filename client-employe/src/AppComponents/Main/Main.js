@@ -6,6 +6,7 @@ import Home from './Home/Home';
 
 import AddEmploye from './Employes/AddEmploye/AddEmploye';
 import ShowEmploye from './Employes/ShowEmploye/ShowEmploye';
+import ListEmploye from './Employes/ListEmploye/ListEmploye';
 import './Main.css';
 
 class Main extends React.Component{
@@ -25,6 +26,7 @@ class Main extends React.Component{
 
                             <Route path="/employe/add" component={AddEmploye}/>
                             <Route path="/employe/show/:id" component={ShowEmploye}/>
+                            <Route path="/employe/list" component={ListEmploye}/>
                         </Switch>
                     </div>
                 </div>

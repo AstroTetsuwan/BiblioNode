@@ -44,4 +44,10 @@ router.get('/findEmp', (req, res, next) => {
     .catch((err) => {console.log(err);});
 });
 
+router.get('/findAll', (req, res, next) => {
+    EmployeDAO.findAll()
+    .then((results) => { res.json(results);})
+    .catch((err) => {console.log(err);});
+});
+
 module.exports = router;

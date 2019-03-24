@@ -1,18 +1,17 @@
 import React from 'react';
 import Axios from 'axios';
-import { constants } from 'crypto';
 
 class ShowEmploye extends React.Component{
     constructor(props){
         super(props);
 
         this.state = {
-            user: null,
+            user: "",
             error: null
         };
     }
     componentDidMount(){
-        Axios.get('/api/employe/get/' + this.props.match.params.id)
+        Axios.get('/api/employe/find/' + this.props.match.params.id)
         .then((response) => {
             let user = response.data.user;
             console.log(user)
@@ -20,18 +19,23 @@ class ShowEmploye extends React.Component{
         })
         .catch((err) => {
             console.log(err);
-            this.setState({user: null, error: err});
+            this.setState({user: {}, error: err});
         });
     }
 
     render(){
+        if(this.state.error !== null){
+            return (<div>
+                <div className="alert alert-danger" role="alert">"Une erreur est survenue.</div>
+            </div>);
+        }
 
         var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         return (
             <div>
                 <h3 style={{marginBottom:"50px"}}>Employé:</h3>
 
-                {this.state.user !== null &&
+                {(this.state.user !== null && this.state.error === null) &&
                 <div style={{fontSize:"1.2em"}}>
                     <div className="col-md-6">
                         <p>Nom: {this.state.user.nom}</p>

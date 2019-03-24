@@ -14,6 +14,16 @@ var EmployeDAO = {
         }
     },
 
+    findAll: async function(){
+        let sql = 'select * from utilisateur left outer join employe on utilisateur.id_utilisateur = employe.id_utilisateur';
+        try{
+            return await pool.query(sql);             
+        } catch(err){
+            console.log("DB ERROR UtilisateurDAO.findAll: " + err);
+            return false;
+        }
+    },
+
     findEmployeById: async function(id){
         let sql = 'SELECT * FROM employe WHERE ?';
         try{

@@ -52,7 +52,7 @@ router.post('/add', loggedIn, userLevel('RESPONSABLE'), (req, res , next) => {
     .catch((err) => { res.status(500).json({success: false}); });                   
 });
 
-router.get('/get/:id',(req, res, next) => {
+router.get('/find/:id', loggedIn, userLevel('RESPONSABLE'),(req, res, next) => {
     UtilisateurDAO.findById(req.params.id)
     .then((user) => {
         user.password = "";
@@ -63,6 +63,15 @@ router.get('/get/:id',(req, res, next) => {
         console.log(err);
         res.status(500).json({error : "Une erreur serveur est survenue."});
     });
+});
+
+router.get('/findAll', loggedIn, userLevel('RESPONSABLE'), (req, res, next) => {
+    EmployeDAO.findAll()
+    .then((results) => { 
+        results = results.map((emp) => {emp.password = ""; return emp;});
+        res.json(results);
+    })
+    .catch((err) => {console.log(err);});
 });
 
 module.exports = router;

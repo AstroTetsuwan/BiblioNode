@@ -17,7 +17,7 @@ function Nav(props){
     if(props.user.categorieEmploye === 'RESPONSABLE'){
         adherentsDDElements.push({name: 'Supprimer', link: "/"});
         employesElements.push({name: 'Ajouter', link: "/employe/add"});
-        employesElements.push({name: 'Liste des employés', link: "/"});
+        employesElements.push({name: 'Liste des employés', link: "/employe/list"});
         statsElements.push({name: 'Random stats', link: "/"})
     }
     if(props.user.categorieEmploye === 'RESPONSABLE' || props.user.categorieEmploye === 'GESTIONNAIRE'){

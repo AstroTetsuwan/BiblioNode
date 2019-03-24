@@ -50,7 +50,7 @@ class ShowEmploye extends React.Component{
                         <p>Pseudo: {this.state.user.pseudo}</p>
                     </div>
                     <div className="col-md-6">
-                        <p>Catégorie Employé: {this.state.user.categorieEmploye}</p>
+                        <p>Catégorie employé: {this.state.user.categorieEmploye}</p>
                     </div>
                     <div className="col-md-6">
                         <p>Matricule: {this.state.user.matricule}</p>

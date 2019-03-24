@@ -12,6 +12,7 @@ CREATE TABLE utilisateur (
 CREATE TABLE adherent (
 	id_utilisateur INT PRIMARY KEY,
 	telephone VARCHAR(16) NOT NULL,
+	date_cotisation DATE NOT NULL,
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) 
 );
 
@@ -30,7 +31,8 @@ CREATE TABLE auteur (
 
 CREATE TABLE adherent_general (
 	nb_max_prets TINYINT NOT NULL,
-	duree_max_prets TINYINT NOT NULL
+	duree_max_prets TINYINT NOT NULL,
+	PRIMARY KEY(nb_max_prets, duree_max_prets)
 );
 
 CREATE TABLE editeur (

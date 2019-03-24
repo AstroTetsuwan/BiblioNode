@@ -8,8 +8,8 @@ var UtilisateurDAO = {
     findByPseudo: async function(pseudo) {
         let sql = 'SELECT *, u.id_utilisateur FROM utilisateur u '  
         + 'LEFT OUTER JOIN employe e ON u.id_utilisateur = e.id_utilisateur '
-        + 'LEFT OUTER JOIN adherent a ON u.id_utilisateur = e.id_utilisateur '
-        + 'WHERE u.pseudonyme = ? AND e.id_utilisateur IS NOT NULL OR a.id_utilisateur IS NOT NULL';        
+        + 'LEFT OUTER JOIN adherent a ON u.id_utilisateur = a.id_utilisateur '
+        + 'WHERE u.pseudonyme = ? AND (e.id_utilisateur IS NOT NULL OR a.id_utilisateur IS NOT NULL)';        
         try{
             let results = await pool.query(sql, [pseudo]);
                  
@@ -26,8 +26,8 @@ var UtilisateurDAO = {
     findById: async function(id) {
         let sql = 'SELECT *, u.id_utilisateur FROM utilisateur u '  
         + 'LEFT OUTER JOIN employe e ON u.id_utilisateur = e.id_utilisateur '
-        + 'LEFT OUTER JOIN adherent a ON u.id_utilisateur = e.id_utilisateur '
-        + 'WHERE u.id_utilisateur = ? AND e.id_utilisateur IS NOT NULL OR a.id_utilisateur IS NOT NULL';               
+        + 'LEFT OUTER JOIN adherent a ON u.id_utilisateur = a.id_utilisateur '
+        + 'WHERE u.id_utilisateur = ? AND (e.id_utilisateur IS NOT NULL OR a.id_utilisateur IS NOT NULL)';               
         try{
             let results = await pool.query(sql, [id]);
               
@@ -46,17 +46,26 @@ var UtilisateurDAO = {
         new Employe(results[0].nom, results[0].prenom, results[0].date_naissance, results[0].sexe, 
             results[0].id_utilisateur, results[0].pseudonyme, results[0].pwd, results[0].categorie_utilisateur, results[0].matricule, results[0].categorie_employe) :
         new Adherent(results[0].nom, results[0].prenom, results[0].date_naissance, results[0].sexe, 
-            results[0].id_utilisateur, results[0].pseudonyme, results[0].pwd, results[0].categorie_utilisateur, results[0].telephone);  
+            results[0].id_utilisateur, results[0].pseudonyme, results[0].pwd, results[0].categorie_utilisateur, results[0].telephone, results[0].date_cotisation);  
     },
 
     insertEmploye: async function(user){
+        return this.insertUtilisateur(user, 'EMPLOYE');
+    },
+
+    insertAdherent: async function(user){
+        return this.insertUtilisateur(user, 'ADHERENT');
+    },
+
+    insertUtilisateur: async function(user, categorieUtilisateur){
         let sql = 'INSERT INTO utilisateur (nom, prenom, pwd, pseudonyme, date_naissance, sexe, categorie_utilisateur) VALUES (?,?,?,?,?,?,?)';
-        let utilisateur = [user.nom, user.prenom, user.password, user.pseudo, user.dob, user.sexe, 'EMPLOYE'];
+        let utilisateur = [user.nom, user.prenom, user.password, user.pseudo, user.dob, user.sexe, categorieUtilisateur];
         try{
             let results = await pool.query(sql, utilisateur);
-            return {id: results.insertId, categorieEmploye: user.categorieEmploye};
+            return (categorieUtilisateur === 'EMPLOYE') ? 
+            {id: results.insertId, categorieEmploye: user.categorieEmploye} : {id: results.insertId, telephone: user.telephone, dateCotisation: new Date()};
         } catch(err){
-            console.log("DB ERROR UtilisateurDAO.insertEmploye: " + err);
+            console.log("DB ERROR UtilisateurDAO.insertUtilisateur: " + err);
             return false;
         }
     },

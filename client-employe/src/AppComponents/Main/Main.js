@@ -4,6 +4,8 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Nav from './Nav/Nav';
 import Home from './Home/Home';
 
+import AddAdherent from './Adherent/AddAdherent/AddAdherent';
+
 import AddEmploye from './Employes/AddEmploye/AddEmploye';
 import ListEmploye from './Employes/ListEmploye/ListEmploye';
 import ShowEmploye from './Employes/ShowEmploye/ShowEmploye';
@@ -27,12 +29,14 @@ class Main extends React.Component{
                         <Switch>
                             <Route exact path="/" component={Home}/>
 
+                            <Route path="/adherent/add" component={AddAdherent}/>
+
                             <Route path="/employe/add" component={AddEmploye}/>
                             <Route path="/employe/list" component={ListEmploye}/>
                             <Route path="/employe/show/:id" component={ShowEmploye}/>
                             <Route path="/employe/update/:id" component={UpdateEmploye}/>
                             <Route path="/employe/delete/:id" component={DeleteEmploye}/>
-                            
+                           
                         </Switch>
                     </div>
                 </div>

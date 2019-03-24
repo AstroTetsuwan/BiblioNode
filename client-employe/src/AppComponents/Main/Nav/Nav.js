@@ -7,7 +7,7 @@ import './Nav.css';
 function Nav(props){
 
     //BIBLIOTHECAIRE LEVEL
-    let adherentsDDElements = [{name: 'Inscription', link: "/"}, {name: 'Rechercher', link: "/"}];
+    let adherentsDDElements = [{name: 'Inscription', link: "/adherent/add"}, {name: 'Rechercher', link: "/"}];
     let pretsRetoursElements = [{name: 'Enregistrer un prêt', link: "/"}, {name: 'Enregistrer un retour', link: "/"}];
     let livresElements = [{name: 'Rechercher', link: "/"}];
     let employesElements = [];
@@ -33,7 +33,7 @@ function Nav(props){
                 <DropDownSection top={{name:"Livres", link:"/"}} dropDownElements={livresElements}/>   
                 
                 {props.user.categorieEmploye === 'RESPONSABLE' &&
-                    <DropDownSection top={{name:"Employés", link:"/"}} dropDownElements={employesElements}/> 
+                    <DropDownSection top={{name:"Employés", link:"/employe/list"}} dropDownElements={employesElements}/> 
                 }
                 {props.user.categorieEmploye === 'RESPONSABLE' &&
                     <DropDownSection top={{name:"Statistiques", link:"/"}} dropDownElements={statsElements}/> 

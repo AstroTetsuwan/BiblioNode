@@ -2,7 +2,7 @@ var pool = require('../db/db').getPool();
 
 var EmployeDAO = {
     insertEmploye: async function(user){
-        let sql = 'INSERT INTO Employe(id_utilisateur, matricule, categorie_employe) VALUES(?,?,?)';
+        let sql = 'INSERT INTO employe(id_utilisateur, matricule, categorie_employe) VALUES(?,?,?)';
         let empValues = [user.id, user.id, user.categorieEmploye];
         try{
             let results = await pool.query(sql, empValues);

@@ -1,5 +1,4 @@
 import React from 'react';
-import {Redirect, withRouter} from 'react-router-dom';
 import axios from 'axios';
 
 class GreetingLogout extends React.Component{
@@ -17,7 +16,8 @@ class GreetingLogout extends React.Component{
             console.log(this);
             window.alert(response.data.message);
             
-            this.context.history.push('/');
+            //React router Redirect won't work, found no other options -> Will need to be changed to 'http://localhost:5000/employe' when server will serve build
+            window.location.replace('http://localhost:3000'); 
         })
         .catch((err) => {
             console.log(err);
@@ -36,4 +36,4 @@ class GreetingLogout extends React.Component{
 
 }
 
-export default withRouter(GreetingLogout);
+export default GreetingLogout;

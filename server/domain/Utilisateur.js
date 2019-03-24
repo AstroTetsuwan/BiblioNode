@@ -8,10 +8,6 @@ class Utilisateur extends Personne{
         this.password = pwd;
         this.categorieUtilisateur = categorieUtilisateur;
     }
-
-    isPretEnRetard(id){
-        return true;
-    }
 }
 
 module.exports = Utilisateur;

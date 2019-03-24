@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 import TextInput from '../../../../ReusableComponents/FormsComponents/TextInput';
 import DateInput from '../../../../ReusableComponents/FormsComponents/DateInput';
@@ -6,6 +7,7 @@ import SelectInput from '../../../../ReusableComponents/FormsComponents/SelectIn
 import SubmitButton from '../../../../ReusableComponents/FormsComponents/SubmitButton';
 
 import './AddEmploye.css';
+import axios from 'axios';
 
 class AddEmploye extends React.Component{
     constructor(props){
@@ -18,10 +20,12 @@ class AddEmploye extends React.Component{
                 pseudo: "",
                 password: "",
                 dob: "",
-                sexe: "",
-                categorieEmploye: "" // matricule should autoincrement server side 
+                sexe: "H",
+                categorieEmploye: "BIBLIOTHECAIRE" // matricule should autoincrement server side 
             },
-            error: null
+            error: null,
+            redirect: false,
+            redirectURL: ""
         }        
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -35,13 +39,19 @@ class AddEmploye extends React.Component{
     }
 
     handleSubmit(e){
-        
+        axios.post('/api/employe/add', this.state.user)
+        .then((response) => {
+            this.setState({ redirect: true, redirectURL: "/employe/show/" + response.data.userId})
+        })
+        .catch((err) => { console.log(err); })
         e.preventDefault();
     }
 
     render(){
         return(
             <div id="add-employe-wrapper">
+                {this.state.redirect && <Redirect to={this.state.redirectURL}/>}
+
                 <h3>Enregistrer un nouvel employé</h3>
                 {this.state.error !== null && 
                     <div className="alert alert-warning" role="alert">

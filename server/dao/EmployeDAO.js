@@ -37,6 +37,30 @@ var EmployeDAO = {
             console.log("DB ERROR EmployeDAO.findEmployeById: " + err);
             return null;
         }
+    },
+
+    updateEmploye: async function(user){
+        let sql = 'UPDATE employe SET categorie_employe = ? WHERE id_utilisateur = ?';
+        try{
+            let results = await pool.query(sql, [user.categorieEmploye, user.id]);
+            return true;
+        }
+        catch(err){
+            console.log("DB ERROR EmployeDAO.updateEmploye: " + err);
+            return false;
+        }
+    },
+
+    deleteEmploye: async function(id){
+        let sql = 'DELETE FROM employe WHERE id_utilisateur = ?';
+        try{
+            let results = await pool.query(sql, [id]);
+            return id;
+        }
+        catch(err){
+            console.log("DB ERROR EmployeDAO.deleteEmploye: " + err);
+            return false;
+        }
     }
 }
 

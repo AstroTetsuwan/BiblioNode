@@ -5,8 +5,11 @@ import Nav from './Nav/Nav';
 import Home from './Home/Home';
 
 import AddEmploye from './Employes/AddEmploye/AddEmploye';
-import ShowEmploye from './Employes/ShowEmploye/ShowEmploye';
 import ListEmploye from './Employes/ListEmploye/ListEmploye';
+import ShowEmploye from './Employes/ShowEmploye/ShowEmploye';
+import UpdateEmploye from './Employes/UpdateEmploye/UpdateEmploye';
+import DeleteEmploye from './Employes/DeleteEmploye/DeleteEmploye';
+
 import './Main.css';
 
 class Main extends React.Component{
@@ -25,8 +28,11 @@ class Main extends React.Component{
                             <Route exact path="/" component={Home}/>
 
                             <Route path="/employe/add" component={AddEmploye}/>
-                            <Route path="/employe/show/:id" component={ShowEmploye}/>
                             <Route path="/employe/list" component={ListEmploye}/>
+                            <Route path="/employe/show/:id" component={ShowEmploye}/>
+                            <Route path="/employe/update/:id" component={UpdateEmploye}/>
+                            <Route path="/employe/delete/:id" component={DeleteEmploye}/>
+                            
                         </Switch>
                     </div>
                 </div>

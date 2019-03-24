@@ -22,6 +22,12 @@ router.post('/login', (req, res, next) => {
     })(req, res, next);
 });
 
+router.get('/logout', (req, res, next) => {
+    req.logout();
+    res.json({message: "Déconnecté."});
+});
+
+//Return the current logged user
 router.get('/getLoggedUser', loggedIn, (req, res, next) => {
     
     UtilisateurDAO.findById(req.session.passport.user)
@@ -34,10 +40,6 @@ router.get('/getLoggedUser', loggedIn, (req, res, next) => {
     });
 });
 
-router.get('/logout', (req, res, next) => {
-    req.logout();
-    res.json({message: "Déconnecté."});
-});
 //AUTHENTICATION //AUTHENTICATION //AUTHENTICATION //AUTHENTICATION //AUTHENTICATION //AUTHENTICATION
 
 router.post('/add', loggedIn, userLevel('RESPONSABLE'), (req, res , next) => {
@@ -46,10 +48,27 @@ router.post('/add', loggedIn, userLevel('RESPONSABLE'), (req, res , next) => {
     let employe = new Employe(emp.nom, emp.prenom, new Date(emp.dob), emp.sexe, 
         0, emp.pseudo, emp.password, 'EMPLOYE', 0, emp.categorieEmploye);
     
-    UtilisateurDAO.insertUtilisateur(employe)
-    .then((user) => { return EmployeDAO.insertEmploye(user); })
+    UtilisateurDAO.insertEmploye(employe)
+    .then(user => EmployeDAO.insertEmploye(user))
     .then((user) => { res.json({success: true, userId: user.id});})
     .catch((err) => { res.status(500).json({success: false}); });                   
+});
+
+router.post('/update', loggedIn, userLevel('RESPONSABLE'),(req, res, next) =>{
+    console.log(req.body);
+    // We dont update password here ! isolate the stuff in complete use case
+    let user = req.body;
+    UtilisateurDAO.updateEmploye(user)
+    .then(user => EmployeDAO.updateEmploye(user))
+    .then((success) => { res.json({success: true}); })
+    .catch((error) => { res.json({success: false}); });
+});
+
+router.get('/delete/:id', loggedIn, userLevel('RESPONSABLE'),(req, res, next) => {
+    EmployeDAO.deleteEmploye(req.params.id)
+    .then(id => UtilisateurDAO.deleteEmploye(id))
+    .then((success) => { res.json({success: true}); })
+    .catch((error) => { res.json({success: false}); });
 });
 
 router.get('/find/:id', loggedIn, userLevel('RESPONSABLE'),(req, res, next) => {

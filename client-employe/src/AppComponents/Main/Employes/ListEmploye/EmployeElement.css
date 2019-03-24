@@ -1,4 +1,12 @@
 .employe-element:hover{
     background: #eee;
+}
+
+.employe-element{
+    padding: 5px 0;
+}
+.clickable-icon{color: #666;}
+.clickable-icon:hover{
     cursor: pointer;
+    color: #222;
 }

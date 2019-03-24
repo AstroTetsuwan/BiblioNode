@@ -4,6 +4,8 @@ import axios from 'axios';
 import SubmitButton from '../../ReusableComponents/FormsComponents/SubmitButton';
 import TextInput from '../../ReusableComponents/FormsComponents/TextInput';
 
+import ErrorMessage from '../../ReusableComponents/ErrorComponents/ErrorMessage';
+
 import './Login.css'
 
 class Login extends React.Component{
@@ -13,7 +15,7 @@ class Login extends React.Component{
         this.state = {
             username: "",
             password: "",
-            error: null
+            error: false
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -54,11 +56,7 @@ class Login extends React.Component{
             <div id="login-wrapper">
                 <h2 id="login-title">Bibliothèque des Marmots</h2>
 
-                {this.state.error !== null &&
-                    <div className="alert alert-danger" role="alert">
-                        {this.state.error}
-                    </div>
-                }
+                {this.state.error && <ErrorMessage message={this.state.error} level="danger"/> }
 
                 <form onSubmit={this.handleSubmit} id="login-form">
                     <TextInput id="username" name="Pseudo" type="text" onChange={this.handleChange} value={this.state.username} required="required"/>                    

@@ -14,11 +14,7 @@ var UtilisateurDAO = {
             let results = await pool.query(sql, [pseudo]);
                  
             if(results.length === 1){
-                return results[0].categorie_utilisateur === 'EMPLOYE' ? 
-                new Employe(results[0].nom, results[0].prenom, results[0].date_naissance, results[0].sexe, 
-                    results[0].id_utilisateur, results[0].pseudonyme, results[0].pwd, results[0].categorie_utilisateur, results[0].matricule, results[0].categorie_employe) :
-                new Adherent(results[0].nom, results[0].prenom, results[0].date_naissance, results[0].sexe, 
-                    results[0].id_utilisateur, results[0].pseudonyme, results[0].pwd, results[0].categorie_utilisateur, results[0].telephone);           
+                return this.buildEmployeOrAdherent(results);           
             }
             else{ return null; }
         } catch(err){
@@ -36,11 +32,7 @@ var UtilisateurDAO = {
             let results = await pool.query(sql, [id]);
               
             if(results.length === 1){
-                return results[0].categorie_utilisateur === 'EMPLOYE' ? 
-                new Employe(results[0].nom, results[0].prenom, results[0].date_naissance, results[0].sexe, 
-                    results[0].id_utilisateur, results[0].pseudonyme, results[0].pwd, results[0].categorie_utilisateur, results[0].matricule, results[0].categorie_employe) :
-                new Adherent(results[0].nom, results[0].prenom, results[0].date_naissance, results[0].sexe, 
-                    results[0].id_utilisateur, results[0].pseudonyme, results[0].pwd, results[0].categorie_utilisateur, results[0].telephone);           
+                return this.buildEmployeOrAdherent(results);         
             }
             else{ return null; }
         } catch(err){
@@ -49,14 +41,46 @@ var UtilisateurDAO = {
         }   
     },
 
-    insertUtilisateur: async function(user){
+    buildEmployeOrAdherent: function(results){
+        return results[0].categorie_utilisateur === 'EMPLOYE' ? 
+        new Employe(results[0].nom, results[0].prenom, results[0].date_naissance, results[0].sexe, 
+            results[0].id_utilisateur, results[0].pseudonyme, results[0].pwd, results[0].categorie_utilisateur, results[0].matricule, results[0].categorie_employe) :
+        new Adherent(results[0].nom, results[0].prenom, results[0].date_naissance, results[0].sexe, 
+            results[0].id_utilisateur, results[0].pseudonyme, results[0].pwd, results[0].categorie_utilisateur, results[0].telephone);  
+    },
+
+    insertEmploye: async function(user){
         let sql = 'INSERT INTO utilisateur (nom, prenom, pwd, pseudonyme, date_naissance, sexe, categorie_utilisateur) VALUES (?,?,?,?,?,?,?)';
         let utilisateur = [user.nom, user.prenom, user.password, user.pseudo, user.dob, user.sexe, 'EMPLOYE'];
         try{
             let results = await pool.query(sql, utilisateur);
             return {id: results.insertId, categorieEmploye: user.categorieEmploye};
         } catch(err){
-            console.log("DB ERROR UtilisateurDAO.insertUtilisateur: " + err);
+            console.log("DB ERROR UtilisateurDAO.insertEmploye: " + err);
+            return false;
+        }
+    },
+
+    updateEmploye: async function(user){
+        let queryParams = [user.nom, user.prenom, user.pseudo, user.dob, user.sexe, user.id];
+        let sql = 'UPDATE utilisateur SET nom = ?, prenom = ?, pseudonyme = ?, date_naissance = ?, sexe = ? WHERE id_utilisateur = ?';
+        try{
+            let results = await pool.query(sql, queryParams);
+            return user;
+        } catch(err){
+            console.log("DB ERROR UtilisateurDAO.updateEmploye: " + err);
+            return false;
+        }
+    },
+
+    deleteEmploye: async function(id){
+        let sql = 'DELETE FROM utilisateur WHERE id_utilisateur = ?';
+        try{
+            let results = await pool.query(sql, [id]);
+            return true;
+        }
+        catch(err){
+            console.log("DB ERROR UtilisateurDAO.deleteEmploye: " + err);
             return false;
         }
     }

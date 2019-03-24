@@ -6,17 +6,17 @@ import DateInput from '../../../../ReusableComponents/FormsComponents/DateInput'
 import SelectInput from '../../../../ReusableComponents/FormsComponents/SelectInput';
 import SubmitButton from '../../../../ReusableComponents/FormsComponents/SubmitButton';
 
-import ErrorMessage from '../../../../ReusableComponents/ErrorComponents/ErrorMessage';
-
 import '../FormEmploye.css';
+
+import ErrorMessage from '../../../../ReusableComponents/ErrorComponents/ErrorMessage';
 import axios from 'axios';
 
-class AddEmploye extends React.Component{
+class UpdateEmploye extends React.Component{
     constructor(props){
         super(props);
 
         this.state = {
-            user: {
+            user: { //DEFAULTS WHILE LOADING -> else error making "uncontrolled" input "controlled" during lifetime of the app
                 nom: "",
                 prenom: "",
                 pseudo: "",
@@ -32,6 +32,19 @@ class AddEmploye extends React.Component{
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    componentDidMount(){
+        axios.get('/api/employe/find/' + this.props.match.params.id)
+        .then((response) => {
+            console.log(response.data.user);
+            response.data.user.dob = response.data.user.dob.split('T')[0];//Getting yyyy-mm-dd from the date
+            this.setState({user: response.data.user, error: false, redirect: false});
+        })
+        .catch((err) => {
+            console.log(err);
+            this.setState({user: {}, error: "Une erreur est survenue.", redirect: false});
+        });
+    }
+
     
     handleChange(id, text){
         const state = this.state;
@@ -40,11 +53,14 @@ class AddEmploye extends React.Component{
     }
 
     handleSubmit(e){
-        axios.post('/api/employe/add', this.state.user)
+        axios.post('/api/employe/update', this.state.user)
         .then((response) => {
-            this.setState({ redirect: "/employe/show/" + response.data.userId});
+            this.setState({ redirect: "/employe/show/" + this.state.user.id});
         })
-        .catch((err) => { console.log(err); })
+        .catch((err) => { 
+            console.log(err);
+            this.setState({user: {}, error: "Une erreur est survenue.", redirect: false}); 
+        })
         e.preventDefault();
     }
 
@@ -56,7 +72,7 @@ class AddEmploye extends React.Component{
 
         return(
             <div id="employe-wrapper">
-                <h3>Enregistrer un nouvel employé</h3>
+                <h3>Modifier un employé</h3>
                 
                 <div id="employe-form-wrapper">
                     <form onSubmit={this.handleSubmit} id="employe-form">
@@ -71,8 +87,7 @@ class AddEmploye extends React.Component{
                                 onChange={this.handleChange} options={['BIBLIOTHECAIRE' , 'RESPONSABLE' , 'GESTIONNAIRE']} col="col-md-4"/>
                         </div>
                         <div className="form-row">
-                            <TextInput id="pseudo" name="Pseudo" type="text" onChange={this.handleChange} value={this.state.user.pseudo} required="required" col="col-md-6"/>
-                            <TextInput id="password" name="Password" type="password" onChange={this.handleChange} value={this.state.user.password} required="required" col="col-md-6"/>
+                            <TextInput id="pseudo" name="Pseudo" type="text" onChange={this.handleChange} value={this.state.user.pseudo} required="required" col="col-md-12"/>
                         </div>        
                         <div id="employe-form-button-wrapper"><SubmitButton name="Enregistrer"/></div>
                     </form>
@@ -82,4 +97,4 @@ class AddEmploye extends React.Component{
     }
 }
 
-export default AddEmploye;
+export default UpdateEmploye;

@@ -11,12 +11,16 @@ passport.use(new LocalStrategy(
             console.log('USER')
             console.log(user);
             if(user === null){
-                return next(null, false, {message : "Ce nom d'utilisateur n'existe pas." }) ;
+                return next(null, false, {message : "Ce nom d'utilisateur n'existe pas."}) ;
             }
             //encrypt password
             password = HashPass.getHash(password);
             if(user.password !== password){
-                return next(null, false, {message : 'Mot de passe incorrect' }) ;
+                return next(null, false, {message : 'Mot de passe incorrect'}) ;
+            }
+
+            if(user.categorieUtilisateur !== 'EMPLOYE'){
+                return next(null, false, {message : 'Utilisateur non autorisé.'}) ;
             }
 
             return next(null, user);

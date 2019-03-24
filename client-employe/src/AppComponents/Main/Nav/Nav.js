@@ -15,7 +15,6 @@ function Nav(props){
 
     //ADD THE RESTRICTED LEVEL PARTS IF NEEDED
     if(props.user.categorieEmploye === 'RESPONSABLE'){
-        adherentsDDElements.push({name: 'Supprimer', link: "/"});
         employesElements.push({name: 'Ajouter', link: "/employe/add"});
         employesElements.push({name: 'Liste des employés', link: "/employe/list"});
         statsElements.push({name: 'Random stats', link: "/"})

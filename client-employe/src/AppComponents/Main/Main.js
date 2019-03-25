@@ -33,7 +33,7 @@ class Main extends React.Component{
 
                             <Route path="/adherent/add" component={AddAdherent}/>
                             <Route path="/adherent/show/:id" render={(props) => <ShowAdherent {...props}  user={this.props.user}/>}/>
-                            <Route path="/adherent/search" component={SearchAdherent}/>
+                            <Route path="/adherent/search" render={(props) => <SearchAdherent {...props}  user={this.props.user}/>}/>
 
                             <Route path="/employe/add" component={AddEmploye}/>
                             <Route path="/employe/list" component={ListEmploye}/>

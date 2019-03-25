@@ -19,20 +19,29 @@ class ShowAdherent extends React.Component{
         this.handleDelete = this.handleDelete.bind(this);
         this.handleUpdateCotisation = this.handleUpdateCotisation.bind(this);
     }
+
     componentDidMount(){
-        Axios.get('/api/adherent/find/' + this.props.match.params.id)
-        .then((response) => {
-            console.log(response.data.user);
-            this.setState({
-                user: response.data.user, 
-                error: false, 
-                redirectUpdate: false, 
-                showDeleteBtn: this.props.user.categorieEmploye === 'RESPONSABLE' ? true : false});
-        })
-        .catch((err) => {
-            console.log(err);
+        if(!Number.isNaN(this.props.match.params.id)){
+            this.loadUserData(this.props.match.params.id);
+        } else{
             this.setState({user: {}, error: "Une erreur est survenue."});
-        });
+        }
+    }
+
+    loadUserData(id){
+        Axios.get('/api/adherent/find/' + id)
+            .then((response) => {
+                console.log(response.data.user);
+                this.setState({
+                    user: response.data.user, 
+                    error: false, 
+                    redirectUpdate: false, 
+                    showDeleteBtn: this.props.user.categorieEmploye === 'RESPONSABLE' ? true : false});
+            })
+            .catch((err) => {
+                console.log(err);
+                this.setState({user: {}, error: "Une erreur est survenue."});
+            });
     }
 
     handleUpdate(){
@@ -41,17 +50,18 @@ class ShowAdherent extends React.Component{
         this.setState(state);
     }
 
-    handleDelete(userId){
-        if(window.confirm("Confirmer la suppression de l'employé.")){
+    handleDelete(){
+        if(window.confirm("Confirmer la suppression de l'adhérent.")){
             const state = this.state;
             state.redirectDelete = true;
-            state.userId = userId;
             this.setState(state);
         }    
     }
 
     handleUpdateCotisation(){
-
+        Axios.get('/api/adherent/update-cotisation/' + this.state.user.id)
+        .then(success => { this.loadUserData(this.state.user.id); })
+        .catch(err => {console.log(err);  this.setState({user: {}, error: "Une erreur est survenue."}); });
     }
 
     render(){

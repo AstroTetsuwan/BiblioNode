@@ -31,7 +31,8 @@ class App extends Component {
     })
     .catch((err) => {
       console.log("FAILURE loggedin REQUEST");
-      console.log(err.response); 
+      console.log(err.response);
+      if(window.location.href !== 'http://localhost:3000/') { window.location.replace('http://localhost:3000/'); }
     });
   }
 

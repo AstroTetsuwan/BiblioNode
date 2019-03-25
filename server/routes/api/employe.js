@@ -51,14 +51,18 @@ router.post('/add', loggedIn, userLevel('RESPONSABLE'), (req, res , next) => {
     UtilisateurDAO.insertEmploye(employe)
     .then(user => EmployeDAO.insertEmploye(user))
     .then((user) => { res.json({success: true, userId: user.id});})
-    .catch((err) => { res.status(500).json({success: false}); });                   
+    .catch((err) => {
+        if(err.code === "ER_DUP_ENTRY"){ res.status(400).json({error: "Ce pseudo existe déjà."}); } 
+        else if(err.code === 'ER_DATA_TOO_LONG'){ res.status(400).json({error: "Pseudo trop long. Maximum 20 caractères."}); } 
+        else { res.status(500).json({error: "Une erreur est survenue."}); } 
+    });                 
 });
 
 router.post('/update', loggedIn, userLevel('RESPONSABLE'),(req, res, next) =>{
     console.log(req.body);
     // We dont update password here ! isolate the stuff in complete use case
     let user = req.body;
-    UtilisateurDAO.updateEmploye(user)
+    UtilisateurDAO.updateUtilisateur(user)
     .then(user => EmployeDAO.updateEmploye(user))
     .then((success) => { res.json({success: true}); })
     .catch((error) => { res.json({success: false}); });
@@ -66,7 +70,7 @@ router.post('/update', loggedIn, userLevel('RESPONSABLE'),(req, res, next) =>{
 
 router.get('/delete/:id', loggedIn, userLevel('RESPONSABLE'),(req, res, next) => {
     EmployeDAO.deleteEmploye(req.params.id)
-    .then(id => UtilisateurDAO.deleteEmploye(id))
+    .then(id => UtilisateurDAO.deleteUtilisateur(id))
     .then((success) => { res.json({success: true}); })
     .catch((error) => { res.json({success: false}); });
 });

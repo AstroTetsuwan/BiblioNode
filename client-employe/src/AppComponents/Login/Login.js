@@ -59,8 +59,8 @@ class Login extends React.Component{
                 {this.state.error && <ErrorMessage message={this.state.error} level="danger"/> }
 
                 <form onSubmit={this.handleSubmit} id="login-form">
-                    <TextInput id="username" name="Pseudo" type="text" onChange={this.handleChange} value={this.state.username} required="required"/>                    
-                    <TextInput id="password" name="Mot de Passe" type="password" onChange={this.handleChange}  value={this.state.password} required="required"/>
+                    <TextInput id="username" name="Pseudo" type="text" onChange={this.handleChange} value={this.state.username} required="required" label={true}  focus={true}/>                    
+                    <TextInput id="password" name="Mot de Passe" type="password" onChange={this.handleChange}  value={this.state.password} required="required" label={true}/>
                     <div id="login-form-button-wrapper"><SubmitButton name="Log in"/></div>
                 </form>
             </div> 

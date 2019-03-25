@@ -5,6 +5,10 @@ class TextInput extends React.Component {
         super(props);
         this.handleChange = this.handleChange.bind(this);
     }
+    componentDidMount(){
+        if(this.props.focus)
+            document.getElementById(this.props.id).focus();
+    }
 
     handleChange(e){
         this.props.onChange(this.props.id, e.target.value);
@@ -13,9 +17,12 @@ class TextInput extends React.Component {
     render(){
         return(
             <div className={"form-group " + (this.props.col || "") }>
-                <label htmlFor={this.props.id}>{this.props.name}</label>
+                
+                {this.props.label && <label htmlFor={this.props.id}>{this.props.name}</label>}
+                
                 <input type={this.props.type} name={this.props.id} className="form-control" required={this.props.required}
                 id={this.props.id} placeholder={this.props.placeholder || this.props.name} value={this.props.value} onChange={this.handleChange}/>
+
             </div>
         );
     }

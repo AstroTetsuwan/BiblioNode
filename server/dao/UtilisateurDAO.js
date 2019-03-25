@@ -14,7 +14,7 @@ var UtilisateurDAO = {
             let results = await pool.query(sql, [pseudo]);
                  
             if(results.length === 1){
-                return this.buildEmployeOrAdherent(results);           
+                return this.buildEmployeOrAdherent(results[0]);           
             }
             else{ return null; }
         } catch(err){
@@ -32,7 +32,7 @@ var UtilisateurDAO = {
             let results = await pool.query(sql, [id]);
               
             if(results.length === 1){
-                return this.buildEmployeOrAdherent(results);         
+                return this.buildEmployeOrAdherent(results[0]);         
             }
             else{ return null; }
         } catch(err){
@@ -41,12 +41,12 @@ var UtilisateurDAO = {
         }   
     },
 
-    buildEmployeOrAdherent: function(results){
-        return results[0].categorie_utilisateur === 'EMPLOYE' ? 
-        new Employe(results[0].nom, results[0].prenom, results[0].date_naissance, results[0].sexe, 
-            results[0].id_utilisateur, results[0].pseudonyme, results[0].pwd, results[0].categorie_utilisateur, results[0].matricule, results[0].categorie_employe) :
-        new Adherent(results[0].nom, results[0].prenom, results[0].date_naissance, results[0].sexe, 
-            results[0].id_utilisateur, results[0].pseudonyme, results[0].pwd, results[0].categorie_utilisateur, results[0].telephone, results[0].date_cotisation);  
+    buildEmployeOrAdherent: function(user){
+        return user.categorie_utilisateur === 'EMPLOYE' ? 
+        new Employe(user.nom, user.prenom, user.date_naissance, user.sexe, 
+            user.id_utilisateur, user.pseudonyme, user.pwd, user.categorie_utilisateur, user.matricule, user.categorie_employe) :
+        new Adherent(user.nom, user.prenom, user.date_naissance, user.sexe, 
+            user.id_utilisateur, user.pseudonyme, user.pwd, user.categorie_utilisateur, user.telephone, user.date_cotisation);  
     },
 
     insertEmploye: async function(user){
@@ -66,30 +66,30 @@ var UtilisateurDAO = {
             {id: results.insertId, categorieEmploye: user.categorieEmploye} : {id: results.insertId, telephone: user.telephone, dateCotisation: new Date()};
         } catch(err){
             console.log("DB ERROR UtilisateurDAO.insertUtilisateur: " + err);
-            return false;
+            throw err; // pass it to the catch where it's called
         }
     },
 
-    updateEmploye: async function(user){
+    updateUtilisateur: async function(user){
         let queryParams = [user.nom, user.prenom, user.pseudo, user.dob, user.sexe, user.id];
         let sql = 'UPDATE utilisateur SET nom = ?, prenom = ?, pseudonyme = ?, date_naissance = ?, sexe = ? WHERE id_utilisateur = ?';
         try{
             let results = await pool.query(sql, queryParams);
             return user;
         } catch(err){
-            console.log("DB ERROR UtilisateurDAO.updateEmploye: " + err);
+            console.log("DB ERROR UtilisateurDAO.updateUtilisateur: " + err);
             return false;
         }
     },
 
-    deleteEmploye: async function(id){
+    deleteUtilisateur: async function(id){
         let sql = 'DELETE FROM utilisateur WHERE id_utilisateur = ?';
         try{
             let results = await pool.query(sql, [id]);
             return true;
         }
         catch(err){
-            console.log("DB ERROR UtilisateurDAO.deleteEmploye: " + err);
+            console.log("DB ERROR UtilisateurDAO.deleteUtilisateur: " + err);
             return false;
         }
     },
@@ -97,12 +97,12 @@ var UtilisateurDAO = {
     searchAdherent: async function(keywords, limit, offset){
         let sql = 'SELECT *, u.id_utilisateur FROM utilisateur u '
         + 'LEFT OUTER JOIN adherent a ON u.id_utilisateur = a.id_utilisateur '
-        + 'WHERE u.pseudonyme LIKE ? OR u.nom LIKE ?  LIMIT ? OFFSET ?';
+        + "WHERE (u.pseudonyme LIKE ? OR u.nom LIKE ?) AND categorie_utilisateur = 'ADHERENT'  LIMIT ? OFFSET ?";
         keywords = "%" + keywords + "%";
         let searchParams = [keywords, keywords, limit, offset];
         try{
-            return await pool.query(sql, searchParams);
-            
+            let results = await pool.query(sql, searchParams);
+            return results.map(user => this.buildEmployeOrAdherent(user));
         }
         catch(err){
             console.log("DB ERROR UtilisateurDAO.searchAdherent: " + err);
@@ -113,11 +113,12 @@ var UtilisateurDAO = {
     searchCountAdherent: async function(keywords){
         let sql = 'SELECT COUNT(*) total FROM utilisateur u '
         + 'LEFT OUTER JOIN adherent a ON u.id_utilisateur = a.id_utilisateur '
-        + 'WHERE u.pseudonyme LIKE ? OR u.nom LIKE ?';
+        + "WHERE (u.pseudonyme LIKE ? OR u.nom LIKE ?) AND categorie_utilisateur = 'ADHERENT'";
         keywords = "%" + keywords + "%";
         let searchParams = [keywords, keywords];
         try{
-            return await pool.query(sql, searchParams);           
+            let results = await pool.query(sql, searchParams);   
+            return results[0].total;        
         }
         catch(err){
             console.log("DB ERROR UtilisateurDAO.searchCountAdherent: " + err);

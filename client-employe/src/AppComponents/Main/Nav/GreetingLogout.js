@@ -28,7 +28,7 @@ class GreetingLogout extends React.Component{
         return(           
             <p style={{display: "flex", justifyContent:"space-between", padding:"1vh", fontSize:"1.2em"}}>
                 <span>Bonjour {this.props.user.pseudo}</span>
-                <span style={{marginRight:"3em", fontSize:"1.8em"}}>Biblitohèque des Marmots</span>
+                <span style={{marginRight:"3em", fontSize:"1.8em"}}>Bibliothèque des Marmots</span>
                 <span style={{color: "rgb(35,82,156)", cursor:"pointer"}} onClick={this.handleLogout}>Log out</span>
             </p>
         );

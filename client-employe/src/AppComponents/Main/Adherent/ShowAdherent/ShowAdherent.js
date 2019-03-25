@@ -4,22 +4,30 @@ import { Redirect } from 'react-router-dom';
 
 import ErrorMessage from '../../../../ReusableComponents/ErrorComponents/ErrorMessage';
 
-class ShowEmploye extends React.Component{
+
+class ShowAdherent extends React.Component{
     constructor(props){
         super(props);
 
         this.state = {
             user: {},
             error: false,
-            redirectUpdate: false
+            redirectUpdate: false, 
+            showDeleteBtn: false
         };
         this.handleUpdate = this.handleUpdate.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+        this.handleUpdateCotisation = this.handleUpdateCotisation.bind(this);
     }
     componentDidMount(){
-        Axios.get('/api/employe/find/' + this.props.match.params.id)
+        Axios.get('/api/adherent/find/' + this.props.match.params.id)
         .then((response) => {
-            this.setState({user: response.data.user, error: false, redirectUpdate: false});
+            console.log(response.data.user);
+            this.setState({
+                user: response.data.user, 
+                error: false, 
+                redirectUpdate: false, 
+                showDeleteBtn: this.props.user.categorieEmploye === 'RESPONSABLE' ? true : false});
         })
         .catch((err) => {
             console.log(err);
@@ -42,16 +50,20 @@ class ShowEmploye extends React.Component{
         }    
     }
 
+    handleUpdateCotisation(){
+
+    }
+
     render(){
         if(this.state.error){ return <ErrorMessage message={this.state.error} level="danger"/> }   
         
-        if(this.state.redirectUpdate){  return <Redirect to={"/employe/update/" + this.state.user.id}/>; }
-        if(this.state.redirectDelete){  return <Redirect to={"/employe/delete/" + this.state.user.id}/>; }
+        if(this.state.redirectUpdate){  return <Redirect to={"/adherent/update/" + this.state.user.id}/>; }
+        if(this.state.redirectDelete){  return <Redirect to={"/adherent/delete/" + this.state.user.id}/>; }
         
         var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         return (
             <div>
-                <h3 style={{marginBottom:"50px"}}>Employé:</h3>
+                <h3 style={{marginBottom:"50px"}}>Adhérent:</h3>
                 <div className="row" style={{fontSize:"1.2em"}}>
                     <div className="col-md-6">
                         <p>Nom: {this.state.user.nom}</p>
@@ -70,19 +82,22 @@ class ShowEmploye extends React.Component{
                         <p>Pseudo: {this.state.user.pseudo}</p>
                     </div>
                     <div className="col-md-6">
-                        <p>Catégorie employé: {this.state.user.categorieEmploye}</p>
+                        <p>Téléphone: {this.state.user.telephone}</p>
                     </div>
                     <div className="col-md-6">
-                        <p>Matricule: {this.state.user.matricule}</p>
+                        <p>Date de paiement cotisation: {new Date(this.state.user.dateCotisation).toLocaleDateString('fr-FR', options)}</p>
                     </div>
                 </div>
                 <div style={{textAlign: "right", padding:"30px"}}>
+                    <button type="button" className="btn btn-primary" style={{marginRight:"20px"}} onClick={this.handleUpdateCotisation}>Renouveler la cotisation</button>
                     <button type="button" className="btn btn-warning" style={{marginRight:"20px"}} onClick={this.handleUpdate}>Modifier</button>
-                    <button type="button" className="btn btn-danger"  onClick={this.handleDelete}>Supprimer</button>
+                    {this.state.showDeleteBtn && 
+                        <button type="button" className="btn btn-danger"  onClick={this.handleDelete}>Supprimer</button>
+                    }
                 </div>
             </div>
         )
     }
 }
 
-export default ShowEmploye;
+export default ShowAdherent;

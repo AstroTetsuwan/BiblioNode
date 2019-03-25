@@ -7,26 +7,11 @@ var AdherentDAO = {
         let adherentValues = [user.id, user.telephone, user.dateCotisation];
         try{
             let results = await pool.query(sql, adherentValues);
-            return user;
+            return user.id;
         }
         catch(err){
             console.log("DB ERROR AdherentDAO.insertAdherent: " + err);
             return false;
-        }
-    },
-
-    findAdherentById: async function(id){
-        let sql = 'SELECT * FROM adherent WHERE ?';
-        try{
-            let results = await pool.query(sql, {id_utilisateur: id});
-            if(results.length === 1)
-                return results[0];
-            else
-                return null;
-        }
-        catch(err){
-            console.log("DB ERROR AdherentDAO.findAdherentById: " + err);
-            return null;
         }
     },
 

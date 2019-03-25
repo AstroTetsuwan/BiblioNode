@@ -62,7 +62,7 @@ var UtilisateurDAO = {
         let utilisateur = [user.nom, user.prenom, user.password, user.pseudo, user.dob, user.sexe, categorieUtilisateur];
         try{
             let results = await pool.query(sql, utilisateur);
-            return (categorieUtilisateur === 'EMPLOYE') ? 
+            return (categorieUtilisateur === 'EMPLOYE') ? //Pour les adhérents, on considère la cotisation réglée le jour de l'inscription 
             {id: results.insertId, categorieEmploye: user.categorieEmploye} : {id: results.insertId, telephone: user.telephone, dateCotisation: new Date()};
         } catch(err){
             console.log("DB ERROR UtilisateurDAO.insertUtilisateur: " + err);
@@ -90,6 +90,37 @@ var UtilisateurDAO = {
         }
         catch(err){
             console.log("DB ERROR UtilisateurDAO.deleteEmploye: " + err);
+            return false;
+        }
+    },
+
+    searchAdherent: async function(keywords, limit, offset){
+        let sql = 'SELECT *, u.id_utilisateur FROM utilisateur u '
+        + 'LEFT OUTER JOIN adherent a ON u.id_utilisateur = a.id_utilisateur '
+        + 'WHERE u.pseudonyme LIKE ? OR u.nom LIKE ?  LIMIT ? OFFSET ?';
+        keywords = "%" + keywords + "%";
+        let searchParams = [keywords, keywords, limit, offset];
+        try{
+            return await pool.query(sql, searchParams);
+            
+        }
+        catch(err){
+            console.log("DB ERROR UtilisateurDAO.searchAdherent: " + err);
+            return false;
+        }
+    },
+
+    searchCountAdherent: async function(keywords){
+        let sql = 'SELECT COUNT(*) total FROM utilisateur u '
+        + 'LEFT OUTER JOIN adherent a ON u.id_utilisateur = a.id_utilisateur '
+        + 'WHERE u.pseudonyme LIKE ? OR u.nom LIKE ?';
+        keywords = "%" + keywords + "%";
+        let searchParams = [keywords, keywords];
+        try{
+            return await pool.query(sql, searchParams);           
+        }
+        catch(err){
+            console.log("DB ERROR UtilisateurDAO.searchCountAdherent: " + err);
             return false;
         }
     }

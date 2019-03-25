@@ -1,11 +1,16 @@
 import React from 'react';
+import axios from 'axios';
 
+import { Redirect } from 'react-router-dom';
 
 import TextInput from '../../../../ReusableComponents/FormsComponents/TextInput';
 import DateInput from '../../../../ReusableComponents/FormsComponents/DateInput';
 import SelectInput from '../../../../ReusableComponents/FormsComponents/SelectInput';
 import SubmitButton from '../../../../ReusableComponents/FormsComponents/SubmitButton';
 import '../../Employes/FormEmploye.css';
+
+import ErrorMessage from '../../../../ReusableComponents/ErrorComponents/ErrorMessage';
+
 
 class AddAdherent extends React.Component{
     constructor(props){
@@ -35,10 +40,26 @@ class AddAdherent extends React.Component{
     }
 
     handleSubmit(e){
+        axios.post('/api/adherent/add', this.state.user)
+        .then((response) => {
+            console.log(response.data.userId);
+            this.setState({redirect: "/adherent/show/" + response.data.userId});
+        })
+        .catch((err) => {
+            const state = this.state;
+            state.error = "Une erreur est survenue.";
+            this.setState(state);
+        });
+
         e.preventDefault();
     }
 
     render(){
+
+        if(this.state.error){ return <ErrorMessage message={this.state.error} level="danger"/> }
+
+        if(this.state.redirect){ return <Redirect to={this.state.redirect}/> }
+
         return(
             <div id="employe-wrapper">
                 <h3>Enregistrer un nouvel adhérent</h3>

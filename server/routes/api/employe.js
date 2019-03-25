@@ -75,7 +75,6 @@ router.get('/find/:id', loggedIn, userLevel('RESPONSABLE'),(req, res, next) => {
     UtilisateurDAO.findById(req.params.id)
     .then((user) => {
         user.password = "";
-        console.log(user.id);
         res.json({user: user});
     })
     .catch((err) => {

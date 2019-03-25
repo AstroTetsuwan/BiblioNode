@@ -7,7 +7,7 @@ import './Nav.css';
 function Nav(props){
 
     //BIBLIOTHECAIRE LEVEL
-    let adherentsDDElements = [{name: 'Inscription', link: "/adherent/add"}, {name: 'Rechercher', link: "/"}];
+    let adherentsDDElements = [{name: 'Inscription', link: "/adherent/add"}, {name: 'Rechercher', link: "/adherent/search"}];
     let pretsRetoursElements = [{name: 'Enregistrer un prêt', link: "/"}, {name: 'Enregistrer un retour', link: "/"}];
     let livresElements = [{name: 'Rechercher', link: "/"}];
     let employesElements = [];

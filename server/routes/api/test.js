@@ -78,4 +78,21 @@ router.get('/updateCotisation', (req, res, next) => {
     .catch(err => { console.log(err); res.json({success: false});});
 });
 
+
+router.get('/hashpass', (req, res, next) => {
+    res.json({hash: hashPass.getHash('root')});
+});
+
+router.get('/searchAdherent', (req, res, next) => {
+    UtilisateurDAO.searchAdherent('ome', 10, 0)
+    .then((results) => {res.json({r: results})})
+    .catch(err => { console.log(err); res.json({success: false});});
+});
+
+router.get('/searchCountAdherent', (req, res, next) => {
+    UtilisateurDAO.searchCountAdherent('ome')
+    .then((results) => {res.json({r: results[0].total})})
+    .catch(err => { console.log(err); res.json({success: false});});
+});
+
 module.exports = router;

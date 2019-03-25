@@ -44,7 +44,11 @@ class AddEmploye extends React.Component{
         .then((response) => {
             this.setState({ redirect: "/employe/show/" + response.data.userId});
         })
-        .catch((err) => { console.log(err); })
+        .catch((err) => { 
+            const state = this.state;
+            state.error = "Une erreur est survenue.";
+            this.setState(state);
+         })
         e.preventDefault();
     }
 

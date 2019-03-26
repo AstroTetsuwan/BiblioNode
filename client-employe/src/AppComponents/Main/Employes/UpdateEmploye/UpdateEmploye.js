@@ -58,22 +58,22 @@ class UpdateEmploye extends React.Component{
             this.setState({ redirect: "/employe/show/" + this.state.user.id});
         })
         .catch((err) => { 
-            console.log(err);
-            this.setState({user: {}, error: "Une erreur est survenue.", redirect: false}); 
+            const state = this.state;
+            state.error = err.response.data.error;
+            this.setState(state); 
         })
         e.preventDefault();
     }
 
     render(){
-
-        if(this.state.error){ return <ErrorMessage message={this.state.error} level="danger"/> }
-
         if(this.state.redirect){ return <Redirect to={this.state.redirect}/> }
 
         return(
             <div id="employe-wrapper">
                 <h3>Modifier un employé</h3>
-                
+
+                {this.state.error && <ErrorMessage message={this.state.error} level="danger"/>}
+
                 <div id="employe-form-wrapper">
                     <form onSubmit={this.handleSubmit} id="employe-form">
                         <div className="form-row">

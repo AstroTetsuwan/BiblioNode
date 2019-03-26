@@ -16,10 +16,10 @@ var UtilisateurDAO = {
             if(results.length === 1){
                 return this.buildEmployeOrAdherent(results[0]);           
             }
-            else{ return null; }
+            else{ return false; }
         } catch(err){
             console.log("DB ERROR UtilisateurDAO.findByPseudo: " + err);
-            return null;
+            return false;
         }   
     },
 
@@ -34,10 +34,10 @@ var UtilisateurDAO = {
             if(results.length === 1){
                 return this.buildEmployeOrAdherent(results[0]);         
             }
-            else{ return null; }
+            else{ return false; }
         } catch(err){
             console.log("DB ERROR UtilisateurDAO.findById: " + err);
-            return null;
+            return false;
         }   
     },
 
@@ -77,8 +77,8 @@ var UtilisateurDAO = {
             let results = await pool.query(sql, queryParams);
             return user;
         } catch(err){
-            console.log("DB ERROR UtilisateurDAO.updateUtilisateur: " + err);
-            return false;
+            console.log("DB ERROR UtilisateurDAO.updateUtilisateur.");           
+            throw err;
         }
     },
 

@@ -10,6 +10,8 @@ import SearchAdherent from './Adherent/SearchAdherent/SearchAdherent';
 import UpdateAdherent from './Adherent/UpdateAdherent/UpdateAdherent';
 import DeleteAdherent from './Adherent/DeleteAdherent/DeleteAdherent';
 
+import AddLivre from './Livres/AddLivre/AddLivre';
+
 import AddEmploye from './Employes/AddEmploye/AddEmploye';
 import ListEmploye from './Employes/ListEmploye/ListEmploye';
 import ShowEmploye from './Employes/ShowEmploye/ShowEmploye';
@@ -38,6 +40,9 @@ class Main extends React.Component{
                             <Route path="/adherent/search" render={(props) => <SearchAdherent {...props}  user={this.props.user}/>}/>
                             <Route path="/adherent/update/:id" component={UpdateAdherent}/>}/>
                             <Route path="/adherent/delete/:id" component={DeleteAdherent}/>}/>
+
+                            <Route path="/livre/add" component={AddLivre}/>  
+
 
                             <Route path="/employe/add" component={AddEmploye}/>
                             <Route path="/employe/list" component={ListEmploye}/>

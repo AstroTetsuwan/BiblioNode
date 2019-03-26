@@ -20,7 +20,7 @@ function Nav(props){
         statsElements.push({name: 'Random stats', link: "/"})
     }
     if(props.user.categorieEmploye === 'RESPONSABLE' || props.user.categorieEmploye === 'GESTIONNAIRE'){
-        livresElements.push({name: 'Ajouter', link: "/"});
+        livresElements.push({name: 'Ajouter', link: "/livre/add"});
     }
 
     return(

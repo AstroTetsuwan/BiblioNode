@@ -18,6 +18,17 @@ var LivreDAO = {
             console.log("DB ERROR : LivreDAO.findLivreByIsbn : " + err);
             throw err;
         }
+    },
+
+    insertLivre: async function(livre){
+        let sql = "INSERT INTO livre (isbn, titre, id_editeur, code_theme, annee_parution, nb_pages, cover_image) VALUES(?,?,?,?,?,?,?)";
+        try{
+            let results = await pool.query(sql, [livre.isbn, livre.titre, livre.idEditeur, livre.codeTheme, livre.anneeParution, livre.nbPages, livre.coverImage]);
+            return results.insertId;
+        } catch(err){
+            console.log("DB ERROR : LivreDAO.insertLivre : " + err);
+            throw err;
+        }
     }
 };
 

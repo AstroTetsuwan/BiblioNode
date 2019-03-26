@@ -5,17 +5,31 @@ var AuteurDAO = {
     findById: async function(id){
         try{
             let results = await pool.query('SELECT * FROM auteur WHERE ?', {id_auteur: id});
-            return results.length === 1 ? new Auteur(results[0].id, results[0].nom, results[0].prenom) : false;
+            return results.length === 1 ? new Auteur(results[0].id_auteur, results[0].nom, results[0].prenom) : false;
         } catch(err){
             console.log("DB ERROR : AuteurDAO.findById : " + err);
             throw err;
         }
     },
 
-    findByNomPrenom(nom, prenom){
+    findByNomPrenom: async function(nom, prenom){
         try{
             let results = await pool.query('SELECT * FROM auteur WHERE ?', {nom: nom, prenom: prenom});
-            return results.length > 0 ? new Auteur(results[0].id, results[0].nom, results[0].prenom) : false;
+            return results.length > 0 ? new Auteur(results[0].id_auteur, results[0].nom, results[0].prenom) : false;
+        } catch(err){
+            console.log("DB ERROR : AuteurDAO.findByNomPrenom : " + err);
+            throw err;
+        }
+    },
+
+    searchByNom: async function(nom){
+        try{
+            nom = nom + "%";
+            console.log(nom);
+            let results = await pool.query('SELECT * FROM auteur WHERE nom LIKE ? LIMIT 20', [nom]);      
+            console.log(results);   
+            console.log(results.sql);   
+            return results.length > 0 ? results.map(auteur => new Auteur(auteur.id_auteur, auteur.nom, auteur.prenom)) : false;
         } catch(err){
             console.log("DB ERROR : AuteurDAO.findByNomPrenom : " + err);
             throw err;

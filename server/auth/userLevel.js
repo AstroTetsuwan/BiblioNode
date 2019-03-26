@@ -6,7 +6,7 @@ var userLevel = function isAuthorized(level){
             if(level === 'RESPONSABLE' && employe.categorie_employe !== 'RESPONSABLE'){
                 res.status(401).json({unauthorized: "Unauthorized"});
             }
-            if(level === 'GESTIONNAIRE' && (employe.categorie_employe !== 'RESPONSABLE' || employe.categorie_employe !== 'GESTIONNAIRE')){
+            if(level === 'GESTIONNAIRE' && (employe.categorie_employe !== 'RESPONSABLE' && employe.categorie_employe !== 'GESTIONNAIRE')){
                 res.status(401).json({unauthorized: "Unauthorized"});
             }
             return next();

@@ -7,6 +7,7 @@ var EditeurDAO = require('../../dao/EditeurDAO');
 var EmployeDAO = require('../../dao/EmployeDAO');
 var AdherentGeneralDAO = require('../../dao/AdherentGeneralDAO');
 var AdherentDAO = require('../../dao/AdherentDAO');
+var AuteurDAO = require('../../dao/AuteurDAO');
 
 router.get('/findEditeurById/:id', (req, res, next) => {
     let id = req.params.id;
@@ -121,6 +122,12 @@ router.get('/updateEditeur', (req, res, next) => {
     EditeurDAO.updateEditeur({id: 1, nom: "Gallimard", ville: "Paris"})
     .then(success => console.log("update success : " + success))
     .catch(err => console.log("Fail update editeur: " + err));
+});
+
+router.get('/searchAuteur/:nom',(req, res, next) => {
+    AuteurDAO.searchByNom(req.params.nom)
+    .then(results => res.json({results}))
+    .catch(err => console.log(err));
 });
 
 module.exports = router;

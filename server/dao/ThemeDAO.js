@@ -11,6 +11,16 @@ ThemeDAO = {
             throw err;
         }
     },
+    
+    findAll: async function(code){
+        try{
+            let results = await pool.query('SELECT * FROM theme');
+            return results;
+        } catch(err){
+            console.log("DB ERROR : ThemeDAO.findAll : " + err);
+            throw err;
+        }
+    },
 
     insertTheme: async function (theme){
         try{

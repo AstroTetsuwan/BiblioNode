@@ -11,7 +11,7 @@ var AdherentDAO = {
         }
         catch(err){
             console.log("DB ERROR AdherentDAO.insertAdherent: " + err);
-            return false;
+            throw err;
         }
     },
 
@@ -19,11 +19,11 @@ var AdherentDAO = {
         let sql = 'UPDATE adherent SET telephone = ? WHERE id_utilisateur = ?';
         try{
             let results = await pool.query(sql, [user.telephone, user.id]);
-            return true;
+            return user.id;
         }
         catch(err){
             console.log("DB ERROR AdherentDAO.updateAdherent: " + err);
-            return false;
+            throw err;
         }
     },
 
@@ -35,7 +35,7 @@ var AdherentDAO = {
         }
         catch(err){
             console.log("DB ERROR AdherentDAO.deleteAdherent: " + err);
-            return false;
+            throw err;
         }
     },
 
@@ -47,7 +47,7 @@ var AdherentDAO = {
         }
         catch(err){
             console.log("DB ERROR AdherentDAO.updateCotisation: " + err);
-            return false;
+            throw err;
         }
     }
 };

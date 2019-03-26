@@ -90,7 +90,7 @@ var UtilisateurDAO = {
         }
         catch(err){
             console.log("DB ERROR UtilisateurDAO.deleteUtilisateur: " + err);
-            return false;
+            throw err;
         }
     },
 

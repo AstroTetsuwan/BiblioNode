@@ -36,9 +36,7 @@ router.get('/getLoggedUser', loggedIn, (req, res, next) => {
         if(!user){res.status(401).json({error : "L'utilisateur n'existe pas."});}
         else{res.json({pseudo: user.pseudo, categorieUtilisateur: user.categorieUtilisateur, categorieEmploye: user.categorieEmploye});}
     })
-    .catch((err) => {
-        res.status(500).json({error : "Une erreur serveur est survenue."});
-    });
+    .catch(err => DBErrorManager(err, req, res, next));
 });
 
 //AUTHENTICATION //AUTHENTICATION //AUTHENTICATION //AUTHENTICATION //AUTHENTICATION //AUTHENTICATION
@@ -60,15 +58,15 @@ router.post('/update', loggedIn, userLevel('RESPONSABLE'),(req, res, next) =>{
     let user = req.body;
     UtilisateurDAO.updateUtilisateur(user)
     .then(user => EmployeDAO.updateEmploye(user))
-    .then((success) => { res.json({success: true}); })
+    .then((userId) => { res.json({userId: userId}); })
     .catch(err => DBErrorManager(err, req, res, next));
 });
 
 router.get('/delete/:id', loggedIn, userLevel('RESPONSABLE'),(req, res, next) => {
     EmployeDAO.deleteEmploye(req.params.id)
     .then(id => UtilisateurDAO.deleteUtilisateur(id))
-    .then((success) => { res.json({success: true}); })
-    .catch((error) => { res.json({success: false}); });
+    .then((success) => { res.json({success: success}); })
+    .catch(err => DBErrorManager(err, req, res, next));
 });
 
 router.get('/find/:id', loggedIn, userLevel('RESPONSABLE'),(req, res, next) => {
@@ -77,10 +75,7 @@ router.get('/find/:id', loggedIn, userLevel('RESPONSABLE'),(req, res, next) => {
         user.password = "";
         res.json({user: user});
     })
-    .catch((err) => {
-        console.log(err);
-        res.status(500).json({error : "Une erreur serveur est survenue."});
-    });
+    .catch(err => DBErrorManager(err, req, res, next));
 });
 
 router.get('/findAll', loggedIn, userLevel('RESPONSABLE'), (req, res, next) => {
@@ -89,7 +84,7 @@ router.get('/findAll', loggedIn, userLevel('RESPONSABLE'), (req, res, next) => {
         results = results.map((emp) => {emp.password = ""; return emp;});
         res.json(results);
     })
-    .catch((err) => {console.log(err);});
+    .catch(err => DBErrorManager(err, req, res, next));
 });
 
 module.exports = router;

@@ -41,7 +41,15 @@ class UpdateEmploye extends React.Component{
         })
         .catch((err) => {
             console.log(err);
-            this.setState({user: {}, error: "Une erreur est survenue.", redirect: false});
+            this.setState({user: {
+                nom: "",
+                prenom: "",
+                pseudo: "",
+                password: "",
+                dob: "",
+                sexe: "H",
+                categorieEmploye: "BIBLIOTHECAIRE" 
+            }, error: "Une erreur est survenue.", redirect: false});
         });
     }
 

@@ -19,11 +19,18 @@ router.post('/add', loggedIn, (req, res, next) => {
 });
 
 router.post('/update', loggedIn, (req, res, next) => {
-    
+    let user = req.body;
+    UtilisateurDAO.updateUtilisateur(user)
+    .then(user => AdherentDAO.updateAdherent(user))
+    .then((userId) => { res.json({userId: userId}); })
+    .catch(err => DBErrorManager(err, req, res, next));
 });
 
 router.get('/delete/:id', loggedIn, userLevel('RESPONSABLE'), (req, res, next) => {
-    
+    AdherentDAO.deleteAdherent(req.params.id)
+    .then(id => UtilisateurDAO.deleteUtilisateur(id))
+    .then((success) => { res.json({success: success}); })
+    .catch(err => DBErrorManager(err, req, res, next));
 });
 
 router.get('/find/:id', loggedIn, (req, res, next) => {
@@ -57,7 +64,7 @@ router.get('/search/:keywords/:page', loggedIn, (req, res, next) => {
 router.get('/update-cotisation/:id', loggedIn, (req, res, next) => {
     AdherentDAO.updateCotisation(req.params.id, new Date())
     .then(success => res.json({success: success}))
-    .catch(err => res.json({error: err}));
+    .catch(err => DBErrorManager(err, req, res, next));
 });
 
 

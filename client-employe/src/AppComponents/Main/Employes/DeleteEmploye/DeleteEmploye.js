@@ -17,7 +17,9 @@ class DeleteEmploye extends React.Component{
             this.setState({ redirect: true, error: false });
         })
         .catch((err) => {
-            this.setState({ redirect: false, error: "Une erreur est survenue." });
+            const state = this.state;
+            state.error = err.response.data.error;
+            this.setState(state); 
         })
     }
 

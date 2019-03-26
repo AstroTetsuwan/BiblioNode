@@ -10,7 +10,7 @@ var EmployeDAO = {
         }
         catch(err){
             console.log("DB ERROR EmployeDAO.insertEmploye: " + err);
-            return false;
+            throw err;
         }
     },
 
@@ -20,7 +20,7 @@ var EmployeDAO = {
             return await pool.query(sql);             
         } catch(err){
             console.log("DB ERROR UtilisateurDAO.findAll: " + err);
-            return false;
+            throw err;
         }
     },
 
@@ -35,7 +35,7 @@ var EmployeDAO = {
         }
         catch(err){
             console.log("DB ERROR EmployeDAO.findEmployeById: " + err);
-            return null;
+            throw err;
         }
     },
 
@@ -43,11 +43,11 @@ var EmployeDAO = {
         let sql = 'UPDATE employe SET categorie_employe = ? WHERE id_utilisateur = ?';
         try{
             let results = await pool.query(sql, [user.categorieEmploye, user.id]);
-            return true;
+            return user.id;
         }
         catch(err){
             console.log("DB ERROR EmployeDAO.updateEmploye: " + err);
-            return false;
+            throw err;
         }
     },
 
@@ -59,7 +59,7 @@ var EmployeDAO = {
         }
         catch(err){
             console.log("DB ERROR EmployeDAO.deleteEmploye: " + err);
-            return false;
+            throw err;
         }
     }
 }

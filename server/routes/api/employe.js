@@ -4,6 +4,7 @@ var passport = require('../../auth/passport');
 var loggedIn = require('../../auth/loggedIn');
 var userLevel = require('../../auth/userLevel');
 var hashPass = require('../../auth/HashPass');
+var DBErrorManager = require('../../utils/DBErrorManager');
 var UtilisateurDAO = require('../../dao/UtilisateurDAO');
 var EmployeDAO = require('../../dao/EmployeDAO');
 var Employe = require('../../domain/Employe');
@@ -32,10 +33,10 @@ router.get('/getLoggedUser', loggedIn, (req, res, next) => {
     
     UtilisateurDAO.findById(req.session.passport.user)
     .then((user) => {
-        res.json({pseudo: user.pseudo, categorieUtilisateur: user.categorieUtilisateur, categorieEmploye: user.categorieEmploye});
+        if(!user){res.status(401).json({error : "L'utilisateur n'existe pas."});}
+        else{res.json({pseudo: user.pseudo, categorieUtilisateur: user.categorieUtilisateur, categorieEmploye: user.categorieEmploye});}
     })
     .catch((err) => {
-        console.log(err);
         res.status(500).json({error : "Une erreur serveur est survenue."});
     });
 });
@@ -51,21 +52,16 @@ router.post('/add', loggedIn, userLevel('RESPONSABLE'), (req, res , next) => {
     UtilisateurDAO.insertEmploye(employe)
     .then(user => EmployeDAO.insertEmploye(user))
     .then((user) => { res.json({success: true, userId: user.id});})
-    .catch((err) => {
-        if(err.code === "ER_DUP_ENTRY"){ res.status(400).json({error: "Ce pseudo existe déjà."}); } 
-        else if(err.code === 'ER_DATA_TOO_LONG'){ res.status(400).json({error: "Pseudo trop long. Maximum 20 caractères."}); } 
-        else { res.status(500).json({error: "Une erreur est survenue."}); } 
-    });                 
+    .catch(err => DBErrorManager(err, req, res, next));                 
 });
 
 router.post('/update', loggedIn, userLevel('RESPONSABLE'),(req, res, next) =>{
-    console.log(req.body);
     // We dont update password here ! isolate the stuff in complete use case
     let user = req.body;
     UtilisateurDAO.updateUtilisateur(user)
     .then(user => EmployeDAO.updateEmploye(user))
     .then((success) => { res.json({success: true}); })
-    .catch((error) => { res.json({success: false}); });
+    .catch(err => DBErrorManager(err, req, res, next));
 });
 
 router.get('/delete/:id', loggedIn, userLevel('RESPONSABLE'),(req, res, next) => {

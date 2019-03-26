@@ -35,6 +35,15 @@ router.get('/findUserByPseudo/:pseudo', (req, res, next) => {
     })
     .catch((err) => { res.json({data: err}); });
 });
+router.get('/findUserById/:id', (req, res, next) => {
+    let id = req.params.id;
+    UtilisateurDAO.findById(id)
+    .then((result) => {
+        if(!result){res.status(401).json({error : "L'utilisateur n'existe pas."});}
+        res.json({data: result});
+    })
+    .catch((err) => { res.json({data: err}); });
+});
 
 router.get('/insertEmploye', (req, res, next) => {
     EmployeDAO.insertEmploye(2, 'BIBLIOTHECAIRE')

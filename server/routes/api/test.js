@@ -100,8 +100,27 @@ router.get('/searchAdherent', (req, res, next) => {
 
 router.get('/searchCountAdherent', (req, res, next) => {
     UtilisateurDAO.searchCountAdherent('ome')
-    .then((results) => {res.json({r: results[0].total})})
+    .then((total) => {res.json({r: total})})
     .catch(err => { console.log(err); res.json({success: false});});
+});
+
+
+router.get('/editeurFindByNome', (req, res, next) => {
+    EditeurDAO.findEditeurByNom("Gallimard")
+    .then(editeur => console.info("Editeur found : ", editeur))
+    .catch(err => console.log("Fail to find editeur: " + err));
+});
+
+router.get('/insertEditeur', (req, res, next) => {
+    EditeurDAO.insertEditeur({nom: "gallimard", ville: "Marseille"})
+    .then(id => console.log("Inserted - index : " + id))
+    .catch(err => console.log("Fail insert editeur: " + err));
+});
+
+router.get('/updateEditeur', (req, res, next) => {
+    EditeurDAO.updateEditeur({id: 1, nom: "Gallimard", ville: "Paris"})
+    .then(success => console.log("update success : " + success))
+    .catch(err => console.log("Fail update editeur: " + err));
 });
 
 module.exports = router;

@@ -23,7 +23,7 @@ var EmployeDAO = {
             throw err;
         }
     },
-
+    //THIS FUNCTION IS USELESS -> CHECK IT OUT
     findEmployeById: async function(id){
         let sql = 'SELECT * FROM employe WHERE ?';
         try{

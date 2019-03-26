@@ -28,7 +28,7 @@ function Nav(props){
             <GreetingLogout user={props.user}/>
             <ul id="nav-links-wrapper">
                 <DropDownSection top={{name:"Accueil", link:"/"}}/>
-                <DropDownSection top={{name:"Adhérents", link:"/"}} dropDownElements={adherentsDDElements}/>   
+                <DropDownSection top={{name:"Adhérents", link:"/adherent/search"}} dropDownElements={adherentsDDElements}/>   
                 <DropDownSection top={{name:"Prêts & retours", link:"/"}} dropDownElements={pretsRetoursElements}/>
                 <DropDownSection top={{name:"Livres", link:"/"}} dropDownElements={livresElements}/>   
                 

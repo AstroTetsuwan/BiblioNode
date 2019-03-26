@@ -17,7 +17,7 @@ var AdherentGeneralDAO = {
             return await pool.query(sql, [nbMaxPrets, dureeMaxPrets]);
         }catch(err){
             console.log("DB ERROR AdherentGeneralDAO.updateAdherentGeneral: " + err);
-            return false;
+            throw err;
         }
     }
 };

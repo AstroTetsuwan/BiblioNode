@@ -12,10 +12,10 @@ ThemeDAO = {
         }
     },
     
-    findAll: async function(code){
+    findAll: async function(){
         try{
             let results = await pool.query('SELECT * FROM theme');
-            return results;
+            return results.map(r => new Theme(r.code_theme, r.libelle, r.theme_parent));
         } catch(err){
             console.log("DB ERROR : ThemeDAO.findAll : " + err);
             throw err;
@@ -24,8 +24,10 @@ ThemeDAO = {
 
     insertTheme: async function (theme){
         try{
-            let results = await pool.query('INSERT INTO theme (code_theme, libelle, theme_parent) VALUES (?,?,?)', 
-            [theme.code, theme.libelle, (theme.themeParent || 'NULL')]);
+            let sql = theme.themeParent ? 'INSERT INTO theme (code_theme, libelle, theme_parent) VALUES (?,?,?)' : 
+            'INSERT INTO theme (code_theme, libelle) VALUES (?,?)';
+            let params = theme.themeParent ? [theme.code, theme.libelle, theme.themeParent] : [theme.code, theme.libelle];
+            let results = await pool.query(sql, params);           
             return results.insertId;
         } catch(err){
             console.log("DB ERROR : ThemeDAO.insertTheme : " + err);
@@ -36,7 +38,7 @@ ThemeDAO = {
     updateTheme: async function(theme){
         try{
             let results = await pool.query('UPDATE theme SET code_theme = ?, libelle = ?, theme_parent = ? WHERE code_theme = ?', 
-                [theme.code, theme.libelle, (theme.themeParent || 'NULL'), theme.code]);
+                [theme.code, theme.libelle, (theme.themeParent || ''), theme.code]);
             return true;
         } catch(err){
             console.log("DB ERROR : ThemeDAO.updateTheme : " + err);

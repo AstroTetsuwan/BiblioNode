@@ -8,7 +8,7 @@ class Livre {
         this.anneeParution = anneeParution;
         this.auteur = auteur;
 
-        this.exemplaires = exemplaires == null ? [] : exemplaires;
+        this.exemplaires = exemplaires || [];
     }
 }
 

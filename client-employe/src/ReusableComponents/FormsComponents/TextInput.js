@@ -20,7 +20,7 @@ class TextInput extends React.Component {
                 
                 {this.props.label && <label htmlFor={this.props.id}>{this.props.name}</label>}
                 
-                <input type={this.props.type} name={this.props.id} className="form-control" required={this.props.required}
+                <input type={this.props.type} name={this.props.id} className="form-control" required={this.props.required} maxLength={this.props.maxLength || ""}
                 id={this.props.id} placeholder={this.props.placeholder || this.props.name} value={this.props.value} onChange={this.handleChange}/>
 
             </div>

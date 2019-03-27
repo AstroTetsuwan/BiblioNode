@@ -1,0 +1,24 @@
+.autoComplete-wrapper{
+    border: 1px solid #ccc;
+    border-radius: 0 0 5px 5px;
+    overflow-y: scroll;
+}
+
+.autoComplete-hidden{
+    display: none;
+}
+
+.autoComplete-option{
+    padding: 5px 10px;
+    margin: 0;
+}
+
+.autoComplete-option-selected {
+    background: #ddd;
+    cursor: pointer;
+}
+
+.autoComplete-wrapper p:hover:not(.autoComplete-option-selected){
+    background: #eee;
+    cursor: pointer;
+}

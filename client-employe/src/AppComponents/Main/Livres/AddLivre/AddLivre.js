@@ -1,12 +1,15 @@
 import React from 'react';
-import AutoCompleteTextInput from '../../../../ReusableComponents/FormsComponents/AutoComplete/AutoCompleteTextInput';
+import TextInput from '../../../../ReusableComponents/FormsComponents/TextInput';
+import SelectInput from '../../../../ReusableComponents/FormsComponents/SelectInput';
 
 class AddLivre extends React.Component{
     constructor(props){
         super(props);
 
         this.state = {
-            nomAuteur:""
+            titre:"",
+            isbn: "",
+            theme: ""
         }
         
         this.handleChange = this.handleChange.bind(this);
@@ -21,9 +24,8 @@ class AddLivre extends React.Component{
     render(){
         return(
             <div>
-                <h1>Add livre</h1>
-                <AutoCompleteTextInput  focus={true} id="nomAuteur" name="Nom" type="text" onChange={this.handleChange} 
-                value={this.state.nomAuteur} required="required" col="col-md-6" label={true}/>
+                <h3>Ajouter un livre</h3>
+                
             </div>
         );
     }

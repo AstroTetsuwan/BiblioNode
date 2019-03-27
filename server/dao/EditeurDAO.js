@@ -6,7 +6,7 @@ var EditeurDAO = {
     findAllEditeur: async function(){
         try { 
             let results = await pool.query("SELECT * from editeur");  
-            return results;
+            return results.map(editeur => new Editeur(editeur.id_editeur, editeur.nom_editeur, editeur.ville));
         } catch(err){
             console.log("DB ERROR EditeurDAO.findAllEditeur: " + err);
             throw err;

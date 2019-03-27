@@ -11,6 +11,7 @@ import UpdateAdherent from './Adherent/UpdateAdherent/UpdateAdherent';
 import DeleteAdherent from './Adherent/DeleteAdherent/DeleteAdherent';
 
 import AddTheme from './Livres/AddTheme/AddTheme';
+import AddEditeur from './Livres/AddEditeur/AddEditeur';
 
 import AddLivre from './Livres/AddLivre/AddLivre';
 
@@ -44,6 +45,7 @@ class Main extends React.Component{
                             <Route path="/adherent/delete/:id" component={DeleteAdherent}/>}/>
 
                             <Route path="/theme/add" component={AddTheme}/>  
+                            <Route path="/editeur/add" component={AddEditeur}/>  
                             <Route path="/livre/add" component={AddLivre}/>  
 
 

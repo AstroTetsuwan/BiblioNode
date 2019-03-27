@@ -1,8 +1,8 @@
 var router = require('express').Router();
-
-
 var AuteurDAO = require('../../dao/AuteurDAO');
 var ThemeDAO = require('../../dao/ThemeDAO');
+var EditeurDAO = require('../../dao/EditeurDAO');
+
 var Theme = require('../../domain/Theme');
 
 var loggedIn = require('../../auth/loggedIn');
@@ -68,12 +68,32 @@ router.post('/theme/add', (req, res, next) => {
     ThemeDAO.insertTheme(new Theme(req.body.code, req.body.libelle, (req.body.parent === "") ? false : req.body.parent.split(" - ")[0]))
     .then(success => res.json({success: true}))
     .catch(err => {
-        err.code === 'ER_DUP_ENTRY' ? res.json({error: "Ce code thème est déjà utilisé."}) : res.json({error: "Une erreur est survenue"})
+        err.code === 'ER_DUP_ENTRY' ? res.json({error: "Ce code thème est déjà enregistré."}) : res.json({error: "Une erreur est survenue"})
     });   
 });
 
 router.get('/theme/findAll', (req, res, next) => {
     ThemeDAO.findAll()
+    .then(results => res.json({results: results}))
+    .catch(err => res.json({error: "Une erreur est survenue."}));
+});
+
+
+router.post('/editeur/add', (req, res, next) => {
+    EditeurDAO.findEditeurByNom(req.body.nom)
+    .then((editeur) => {
+        if(!editeur){
+            EditeurDAO.insertEditeur({nom: req.body.nom, ville: req.body.ville})
+            .then(id => res.json({success: true}))
+            .catch(err => { console.log(err); res.json({error: "Une erreur est survenue."}); });
+        } else{
+            res.json({error: "Cet éditeur est déjà enregistré."});
+        }
+    })
+});
+
+router.get('/editeur/findAll', (req, res, next) => {
+    EditeurDAO.findAllEditeur()
     .then(results => res.json({results: results}))
     .catch(err => res.json({error: "Une erreur est survenue."}));
 });

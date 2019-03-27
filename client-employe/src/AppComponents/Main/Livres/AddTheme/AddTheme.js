@@ -20,6 +20,10 @@ class AddTheme extends React.Component{
     }
 
     componentDidMount(){
+        this.loadList();
+    }
+
+    loadList(){
         axios.get('/api/book/theme/findAll')
         .then((response) => {        
             const state = this.state;
@@ -48,7 +52,10 @@ class AddTheme extends React.Component{
                 success: "Thème enregistré.",
                 parentsOptions: []
             }, () => { window.setTimeout(
-                    () => { this.setState({  theme: { code: "", libelle: "", parent: "" }, success: false, parentsOptions: []}) }, 2000);
+                    () => { 
+                        this.setState({  theme: { code: "", libelle: "", parent: "" }, success: false, parentsOptions: []}); 
+                        this.loadList();
+                    }, 2000);
             });
         })
         .catch((err) => { 

@@ -4,8 +4,17 @@ import axios from 'axios';
 class AutoCompleteTextInput extends React.Component{
     constructor(props){
         super(props);
+
+        this.state = {
+            searchResults: [],
+            autoCompleteCurrentSelectedIndex: 0,
+            autoCompleteDisplayed: false
+        };
+
         this.handleChange = this.handleChange.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.handleAutoCompleteClick = this.handleAutoCompleteClick.bind(this);
+        this.handleFocusOut = this.handleFocusOut.bind(this);
     }
     componentDidMount(){
         if(this.props.focus)
@@ -19,13 +28,27 @@ class AutoCompleteTextInput extends React.Component{
             axios.get('/api/book/autocomplete/auteur/' + e.target.value)
             .then(results => console.log(results.data.results))
             .catch(err => console.log(err));
+        } else {
+            const state =  this.state;
+            state.searchResults = [];
+            this.setState(state);
         }
     }
 
     handleKeyPress(e){
         console.log(e.key);
         console.log(e.keyCode); //ArrowUp 38 - ArrowDown 40 - Enter 13 -> should prevent From Submitting some way (stopPropagation ?)
-        //if this.state.autocomplete(so Autocomplete Box Is Displayed) -> ( pass new index to "Select" )
+        //if this.state.autoCompleteDisplayed(so Autocomplete Box Is Displayed) -> ( pass new index to "Select" )
+    }
+
+    handleAutoCompleteClick(searchResultsIndex){
+        //set autoCompleteDisplayed: false
+        //values to display in text input = this.state.searchResults[searchResultsIndex]
+    }
+
+    handleFocusOut(){
+        //set autoCompleteDisplayed: false
+        console.log("focus out");
     }
 
     render(){
@@ -34,7 +57,8 @@ class AutoCompleteTextInput extends React.Component{
                 
                 {this.props.label && <label htmlFor={this.props.id}>{this.props.name}</label>}
                 
-                <input type={this.props.type} name={this.props.id} className="form-control" required={this.props.required} onKeyDown={this.handleKeyPress}
+                <input type={this.props.type} name={this.props.id} className="form-control" required={this.props.required} 
+                onBlur={this.handleFocusOut} onKeyDown={this.handleKeyPress}
                 id={this.props.id} placeholder={this.props.placeholder || this.props.name} value={this.props.value} onChange={this.handleChange}/>
 
             </div>

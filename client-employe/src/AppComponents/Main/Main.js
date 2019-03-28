@@ -14,6 +14,7 @@ import AddTheme from './Livres/AddTheme/AddTheme';
 import AddEditeur from './Livres/AddEditeur/AddEditeur';
 
 import AddLivre from './Livres/AddLivre/AddLivre';
+import ShowLivre from './Livres/ShowLivre/ShowLivre';
 
 import AddEmploye from './Employes/AddEmploye/AddEmploye';
 import ListEmploye from './Employes/ListEmploye/ListEmploye';
@@ -46,7 +47,8 @@ class Main extends React.Component{
 
                             <Route path="/theme/add" component={AddTheme}/>  
                             <Route path="/editeur/add" component={AddEditeur}/>  
-                            <Route path="/livre/add" component={AddLivre}/>  
+                            <Route path="/livre/add" component={AddLivre}/>   
+                            <Route path="/livre/show/:id" component={ShowLivre}/>  
 
 
                             <Route path="/employe/add" component={AddEmploye}/>

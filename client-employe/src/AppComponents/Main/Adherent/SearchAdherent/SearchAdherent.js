@@ -55,7 +55,6 @@ class SearchAdherent extends React.Component{
     }
 
     render(){
-        if(this.state.error){ return <ErrorMessage message={this.state.error} level="danger"/> }
         
         if(this.state.redirectShow){  return <Redirect to={"/adherent/show/" + this.state.userId}/>; } 
         if(this.state.redirectUpdate){  return <Redirect to={"/adherent/update/" + this.state.userId}/>; }

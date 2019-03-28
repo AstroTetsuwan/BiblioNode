@@ -2,6 +2,8 @@ var router = require('express').Router();
 var AuteurDAO = require('../../dao/AuteurDAO');
 var ThemeDAO = require('../../dao/ThemeDAO');
 var EditeurDAO = require('../../dao/EditeurDAO');
+var LivreDAO = require('../../dao/LivreDAO');
+var AuteurLivreDAO = require('../../dao/AuteurLivreDAO');
 
 var Theme = require('../../domain/Theme');
 
@@ -10,7 +12,41 @@ var userLevel = require('../../auth/userLevel');
 
 //PROTECTED GESTIONNAIRE DE FONDS
 router.post('/add', loggedIn, userLevel('GESTIONNAIRE'), (req, res, next) => {
-    res.json({data:'add book'});
+    let livre = req.body;
+    
+    LivreDAO.findLivreByIsbn(livre.isbn)
+    .then(doesLivreExist => {
+        if(!doesLivreExist){
+            let resultObject = {};
+            AuteurDAO.insertMultipleAuteurs(livre.auteurs)
+            .then(auteursIds => { 
+                resultObject.auteursIds = auteursIds; 
+                return LivreDAO.insertLivre(livre);
+            })
+            .then(livreId => {
+                console.log("THAT'S WHAT YOU'LL WANT TO CHECK, LIVRE ISBN: " + livreId);
+                AuteurLivreDAO.insertMultipleAuteursLivre(resultObject.auteursIds, livreId)
+                .then(success => res.json({success: "SO FUCKIN TRUE MY MATE", livreId: livreId}))
+                .catch(error => {
+                    console.log("DAMN: " + error);
+                    res.json({error: "Une d'erreur est survenue."})       
+                });
+                
+            })
+            .catch(err => {
+                console.log("SHITSHITSHIT: " + err);
+                res.json({error: "Une d'erreur est survenue."});
+            });
+        }
+        else{
+            res.json({livreId:doesLivreExist.isbn});
+        }
+    })
+    .catch(err => {
+        console.log("DAMN YOU ERROR!!! : " + err);
+        res.json({error: "Une d'erreur est survenue."});
+    });
+    
 });
 
 //PROTECTED GESTIONNAIRE DE FONDS

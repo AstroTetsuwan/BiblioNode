@@ -31,6 +31,21 @@ AuteurLivreDAO = {
         }
     },
 
+    insertMultipleAuteursLivre: async function(auteursIds, isbn){
+        try{
+            const promises = auteursIds.map((id, i) => { 
+                return this.insertAuteurLivre(id, isbn, i + 1)
+                .then(success => {return Promise.resolve(success); })
+                .catch(err => {console.log(err); return Promise.reject(err); }) 
+            });
+            await Promise.all(promises);
+            return true;
+        } catch(err){
+            console.log("DB ERROR : AuteurLivreDAO.insertMultipleAuteursLivre : " + err);
+            throw err;
+        }
+    },
+
     deleteAuteurLivreByIdAuteur: async function(idAuteur){
         try{
             let results = await pool.query('DELETE FROM auteur_livre WHERE id_auteur = ?', [idAuteur]);

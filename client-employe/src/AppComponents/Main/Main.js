@@ -48,7 +48,7 @@ class Main extends React.Component{
                             <Route path="/theme/add" component={AddTheme}/>  
                             <Route path="/editeur/add" component={AddEditeur}/>  
                             <Route path="/livre/add" component={AddLivre}/>   
-                            <Route path="/livre/show/:id" component={ShowLivre}/>  
+                            <Route path="/livre/show/:id" render={(props) => <ShowLivre {...props}  user={this.props.user}/>}/>  
 
 
                             <Route path="/employe/add" component={AddEmploye}/>

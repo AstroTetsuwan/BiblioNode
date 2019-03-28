@@ -8,6 +8,7 @@ var EmployeDAO = require('../../dao/EmployeDAO');
 var AdherentGeneralDAO = require('../../dao/AdherentGeneralDAO');
 var AdherentDAO = require('../../dao/AdherentDAO');
 var AuteurDAO = require('../../dao/AuteurDAO');
+var LivreDAO = require('../../dao/LivreDAO');
 
 router.get('/findEditeurById/:id', (req, res, next) => {
     let id = req.params.id;
@@ -128,6 +129,13 @@ router.get('/searchAuteur/:nom',(req, res, next) => {
     AuteurDAO.searchByNom(req.params.nom)
     .then(results => res.json({results}))
     .catch(err => console.log(err));
+});
+
+
+router.get('/getLivre',(req, res, next) => {
+    LivreDAO.findLivreByIsbn('97845645645')
+    .then(livre => res.json(livre))
+    .catch(err => console.log('FUCK:  ' + err));
 });
 
 module.exports = router;

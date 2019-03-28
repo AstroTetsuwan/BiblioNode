@@ -24,28 +24,15 @@ router.post('/add', loggedIn, userLevel('GESTIONNAIRE'), (req, res, next) => {
                 return LivreDAO.insertLivre(livre);
             })
             .then(livreId => {
-                console.log("THAT'S WHAT YOU'LL WANT TO CHECK, LIVRE ISBN: " + livreId);
                 AuteurLivreDAO.insertMultipleAuteursLivre(resultObject.auteursIds, livreId)
                 .then(success => res.json({success: "SO FUCKIN TRUE MY MATE", livreId: livreId}))
-                .catch(error => {
-                    console.log("DAMN: " + error);
-                    res.json({error: "Une d'erreur est survenue."})       
-                });
-                
+                .catch(error => { res.json({error: "Une erreur est survenue."}) });                
             })
-            .catch(err => {
-                console.log("SHITSHITSHIT: " + err);
-                res.json({error: "Une d'erreur est survenue."});
-            });
+            .catch(err => { res.json({error: "Une erreur est survenue."}); });
         }
-        else{
-            res.json({livreId:doesLivreExist.isbn});
-        }
+        else{ res.json({livreId:doesLivreExist.isbn}); }
     })
-    .catch(err => {
-        console.log("DAMN YOU ERROR!!! : " + err);
-        res.json({error: "Une d'erreur est survenue."});
-    });
+    .catch(err => { res.json({error: "Une erreur est survenue."}); });
     
 });
 
@@ -60,7 +47,9 @@ router.get('/delete/:bookId', loggedIn, userLevel('GESTIONNAIRE'), (req, res, ne
 });
 
 router.get('/find/:bookId', (req, res, next) => {
-    res.json({data:'get book'});
+    LivreDAO.findLivreByIsbn(req.params.bookId)
+    .then(livre => res.json({livre: livre}))
+    .catch(err => res.json({error: err}));
 });
 
 router.get('/search/:keywords/:page', (req, res, next) => {
@@ -113,7 +102,6 @@ router.get('/theme/findAll', (req, res, next) => {
     .then(results => res.json({results: results}))
     .catch(err => res.json({error: "Une erreur est survenue."}));
 });
-
 
 router.post('/editeur/add', (req, res, next) => {
     EditeurDAO.findEditeurByNom(req.body.nom)

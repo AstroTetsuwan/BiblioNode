@@ -6,6 +6,7 @@ var Editeur = require('../domain/Editeur');
 var Exemplaire = require('../domain/Exemplaire');
 
 var LivreDAO = {
+
     findLivreByIsbn: async function (isbn){
         let sql = "SELECT l.isbn, l.titre, l.annee_parution, l.nb_pages, l.cover_image, e.id_editeur, e.nom_editeur, e.ville, " +
         "t.code_theme, t.libelle, t.theme_parent " +
@@ -15,7 +16,6 @@ var LivreDAO = {
 
         try{
             let results = await pool.query(sql, [isbn]);
-            console.log(results); console.log("Lenght: " + results.length);
             if(results.length !== 1){ return false; }
             
             try{
@@ -27,8 +27,7 @@ var LivreDAO = {
                     return a;
                 });
                 try{
-                    let sql3 = "SELECT * FROM exemplaire WHERE isbn = ?";
-                    let exemplairesResults = await pool.query(sql3, [isbn]);
+                    let exemplairesResults = await pool.query("SELECT * FROM exemplaire WHERE isbn = ?", [isbn]);
                     let bookExemplaires = exemplairesResults.map(ex => new Exemplaire(ex.id_exemplaire, ex.date_achat, ex.isbn, ex.status_exemplaire));
                             
                     let livre = new Livre(isbn, results[0].titre, 
@@ -51,6 +50,20 @@ var LivreDAO = {
             return livre.isbn;
         } catch(err){
             console.log("DB ERROR : LivreDAO.insertLivre : " + err);
+            throw err;
+        }
+    },
+
+    updateLivre: async function(livre){
+        
+    },
+
+    deleteLivre: async function(isbn){
+        try{
+            await pool.query('DELETE FROM livre WHERE isbn = ?', [isbn]);
+            return true;
+        }catch(err){
+            console.log("DB ERROR : LivreDAO.deleteLivre : " + err);
             throw err;
         }
     }

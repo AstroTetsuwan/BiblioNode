@@ -79,14 +79,10 @@ class AddLivre extends React.Component{
 
     buildBookToPost(){
         let editeurLivreId = -1;
-        this.state.editeurOptions.full.forEach(editeur => {
-            if(editeur.nom === this.state.livre.editeur){ editeurLivreId = editeur.id; }
-        });
+        this.state.editeurOptions.full.forEach(editeur => {  if(editeur.nom === this.state.livre.editeur){ editeurLivreId = editeur.id; } });
 
         let themeLivreId = -1;
-        this.state.themeOptions.full.forEach(theme => {
-            if(theme.libelle === this.state.livre.theme){ themeLivreId = theme.code; }
-        });
+        this.state.themeOptions.full.forEach(theme => { if(theme.libelle === this.state.livre.theme){ themeLivreId = theme.code; } });
 
         let auteurs = [{nom: this.state.livre.auteurPrincipalNom, prenom: this.state.livre.auteurPrincipalPrenom}];
         this.state.livre.auteursSecondaires.forEach(auteur => auteurs.push(auteur));

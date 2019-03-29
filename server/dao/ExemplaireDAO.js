@@ -34,6 +34,17 @@ var ExemplaireDAO = {
             console.log("DB ERROR : ExemplaireDAO.deleteExemplaire : " + err);
             throw err;
         }
+    },
+
+    deleteAllExemplairesOfBook: async function(isbn){
+        let sql = "DELETE FROM exemplaire WHERE isbn = ?";
+        try{
+            let results = await pool.query(sql,[isbn]);
+            return true;
+        } catch(err){
+            console.log("DB ERROR : ExemplaireDAO.deleteExemplaire : " + err);
+            throw err;
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 
 class ShowLivre extends React.Component{
     constructor(props){
@@ -53,7 +54,9 @@ class ShowLivre extends React.Component{
 
     handleDelete(){
         if(window.confirm("Confirmez la suppression du livre.")){
-            
+            axios.get('/api/book/delete/' + this.state.livre.isbn)
+            .then(success => this.setState({redirect: '/'}))
+            .catch(err => console.log(err));
         }
     }
 
@@ -70,6 +73,8 @@ class ShowLivre extends React.Component{
     }
 
     render(){
+        if(this.state.redirect){ return <Redirect to={this.state.redirect}/>;}
+
         var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         return(
             <div className="row" style={{fontSize: "1.2em"}}>

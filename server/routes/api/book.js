@@ -13,8 +13,7 @@ var userLevel = require('../../auth/userLevel');
 
 //PROTECTED GESTIONNAIRE DE FONDS
 router.post('/add', loggedIn, userLevel('GESTIONNAIRE'), (req, res, next) => {
-    let livre = req.body;
-    
+    let livre = req.body;    
     LivreDAO.findLivreByIsbn(livre.isbn)
     .then(doesLivreExist => {
         if(!doesLivreExist){
@@ -26,15 +25,14 @@ router.post('/add', loggedIn, userLevel('GESTIONNAIRE'), (req, res, next) => {
             })
             .then(livreId => {
                 AuteurLivreDAO.insertMultipleAuteursLivre(resultObject.auteursIds, livreId)
-                .then(success => res.json({success: "SO FUCKIN TRUE MY MATE", livreId: livreId}))
-                .catch(error => { res.json({error: "Une erreur est survenue."}) });                
+                .then(success => res.json({livreId: livreId}))
+                .catch(err => { res.json({error: "Une erreur est survenue."}) });                
             })
             .catch(err => { res.json({error: "Une erreur est survenue."}); });
         }
-        else{ console.log("doesLivreExist");console.log(doesLivreExist); res.json({livreId:doesLivreExist.isbn}); }
+        else{ res.json({livreId:doesLivreExist.isbn}); }
     })
-    .catch(err => { res.json({error: "Une erreur est survenue."}); });
-    
+    .catch(err =>  res.json({error: "Une erreur est survenue."}));   
 });
 
 //PROTECTED GESTIONNAIRE DE FONDS
@@ -44,7 +42,12 @@ router.post('/update/:bookId', loggedIn, userLevel('GESTIONNAIRE'), (req, res, n
 
 //PROTECTED GESTIONNAIRE DE FONDS
 router.get('/delete/:bookId', loggedIn, userLevel('GESTIONNAIRE'), (req, res, next) => {
-    res.json({data:'delete book'});
+    let isbn = req.params.bookId;
+    AuteurLivreDAO.deleteAuteurLivreByIsbn(isbn)
+    .then(success => {return ExemplaireDAO.deleteAllExemplairesOfBook(isbn)})
+    .then(success => {return LivreDAO.deleteLivre(isbn)})
+    .then(success => res.json({success: true}))
+    .catch(err => res.json({error: "Une erreur est survenue."}));
 });
 
 router.get('/find/:bookId', (req, res, next) => {
@@ -79,11 +82,7 @@ router.get('/delete-exemplaire/:exemplaireId', loggedIn, userLevel('GESTIONNAIRE
 //PROTECTED GESTIONNAIRE DE FONDS
 router.get('/autocomplete/auteur/:name', loggedIn, userLevel('GESTIONNAIRE'), (req, res, next) => {    
     AuteurDAO.searchByNom(req.params.name)
-    .then(results => { 
-        res.json({
-            results: results.map((auteur) => { return {value: (auteur.nom + " " + auteur.prenom), id: auteur.id} })
-        })
-    })
+    .then(results => res.json({results: results.map((auteur) => { return {value: (auteur.nom + " " + auteur.prenom), id: auteur.id} }) }))
     .catch(err => { console.log(err); res.json({results: []}); });
 });
 

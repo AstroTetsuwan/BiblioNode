@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 
+import ErrorMessage from '../../../ReusableComponents/ErrorComponents/ErrorMessage';
+
 import SearchUser from './SearchUser';
 import UtilisateurInfos from '../Utilisateur/UtilisateurInfos';
 
@@ -18,15 +20,15 @@ class AddPret extends React.Component{
 
     handleSubmitUser(userid){
         axios.get('/api/utilisateur/find/' + userid)
-        .then(response => {
-            this.setState({user: response.data.user})
-        })
+        .then(response => this.setState({user: response.data.user}))
         .catch(err => this.setState({error: "Une erreur est survenue"}));
     }
 
     render(){
         return(
             <div>
+                {this.state.error && <ErrorMessage message={this.state.error} level="success"/>}
+
                 {!this.state.user && <SearchUser handleSubmit={this.handleSubmitUser} />}
 
                 {this.state.user && 

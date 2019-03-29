@@ -17,7 +17,7 @@ var LivreDAO = {
             console.log(results); console.log("Lenght: " + results.length);
             if(results.length !== 1){ return false; }
             
-            let sql2 = "SELECT * FROM auteur INNER JOIN auteur_livre al ON auteur.id_auteur = al.id_auteur WHERE al.isbn = ?";
+            let sql2 = "SELECT * FROM auteur INNER JOIN auteur_livre al ON auteur.id_auteur = al.id_auteur WHERE al.isbn = ? ORDER BY al.ordre_auteur";
             let auteurResults = await pool.query(sql2, [isbn]);
 
             let bookAuteurs = auteurResults.map(auteur => { 

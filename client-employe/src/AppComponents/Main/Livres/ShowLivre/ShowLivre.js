@@ -22,9 +22,14 @@ class ShowLivre extends React.Component{
         this.handleUpdate = this.handleUpdate.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handleAddExemplaire = this.handleAddExemplaire.bind(this);
+        this.handleDeleteExemplaire = this.handleDeleteExemplaire.bind(this);
     }
 
     componentDidMount(){
+        this.loadBookInfos();
+    }
+
+    loadBookInfos(){
         axios.get('/api/book/find/' + this.props.match.params.id)
         .then(response => {
             console.log(response.data.livre);
@@ -47,14 +52,25 @@ class ShowLivre extends React.Component{
     }
 
     handleDelete(){
-
+        if(window.confirm("Confirmez la suppression du livre.")){
+            
+        }
     }
 
     handleAddExemplaire(){
+        axios.get('/api/book/add-exemplaire/' + this.state.livre.isbn)
+        .then(success => this.loadBookInfos())
+        .catch(err => console.log(err));
+    }
 
+    handleDeleteExemplaire(e){
+        axios.get('/api/book/delete-exemplaire/' + e.target.id.split('-')[1])
+        .then(success => this.loadBookInfos())
+        .catch(err => console.log(err));
     }
 
     render(){
+        var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         return(
             <div className="row" style={{fontSize: "1.2em"}}>
                 <div className="col-md-6">
@@ -81,9 +97,12 @@ class ShowLivre extends React.Component{
 
                         {this.state.livre.exemplaires.map(
                             (ex, i) => 
-                            <p key={i}>{ex.dateAchat} - {ex.status} 
+                            <p key={i} style={{borderBottom:"1px solid #ddd", margin: " 10px"}}>
+                                <span style={{fontWeight:"bold"}}>Date d'achat: </span>{new Date(ex.dateAchat).toLocaleDateString('fr-FR', options)}
+                                 - <span style={{fontWeight:"bold"}}> Status: </span>{ex.statusExemplaire} 
+
                                 {(this.props.user.categorieEmploye === 'RESPONSABLE' || this.props.user.categorieEmploye === 'GESTIONNAIRE') && 
-                                <button type="button" id={"deleteExemplaire-" + i} 
+                                <button type="button" id={"deleteExemplaire-" + ex.id} style={{margin:"20px"}}
                                     className="btn btn-danger"  onClick={this.handleDeleteExemplaire}>Supprimer</button> }
                             </p>
                         )}

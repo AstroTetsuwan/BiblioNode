@@ -3,6 +3,7 @@ var Livre = require('../domain/Livre');
 var Auteur = require('../domain/Auteur');
 var Theme = require('../domain/Theme');
 var Editeur = require('../domain/Editeur');
+var Exemplaire = require('../domain/Exemplaire');
 
 var LivreDAO = {
     findLivreByIsbn: async function (isbn){
@@ -17,23 +18,27 @@ var LivreDAO = {
             console.log(results); console.log("Lenght: " + results.length);
             if(results.length !== 1){ return false; }
             
-            let sql2 = "SELECT * FROM auteur INNER JOIN auteur_livre al ON auteur.id_auteur = al.id_auteur WHERE al.isbn = ? ORDER BY al.ordre_auteur";
-            let auteurResults = await pool.query(sql2, [isbn]);
-
-            let bookAuteurs = auteurResults.map(auteur => { 
-                let a = new Auteur(auteur.id_auteur, auteur.nom, auteur.prenom); 
-                a.ordreAuteur = auteur.ordre_auteur;
-                return a;
-            });
-                      
-            let livre = new Livre(isbn, results[0].titre, 
-                new Theme(results[0].code_theme, results[0].libelle, results[0].theme_parent), new Editeur(results[0].id_editeur, results[0].nom_editeur, results[0].ville),
-                results[0].nb_pages, results[0].annee_parution, bookAuteurs, [] ); //EMPTY ARRAY == MISSING EXEMPLAIRE, LOOKS LIKE WE GONNA NEED ANOTHER QUERY
-            return livre;
-        } catch(err){
-            console.log("DB ERROR : LivreDAO.findLivreByIsbn : " + err);
-            throw err;
-        }
+            try{
+                let sql2 = "SELECT * FROM auteur INNER JOIN auteur_livre al ON auteur.id_auteur = al.id_auteur WHERE al.isbn = ? ORDER BY al.ordre_auteur";
+                let auteurResults = await pool.query(sql2, [isbn]);
+                let bookAuteurs = auteurResults.map(auteur => { 
+                    let a = new Auteur(auteur.id_auteur, auteur.nom, auteur.prenom); 
+                    a.ordreAuteur = auteur.ordre_auteur;
+                    return a;
+                });
+                try{
+                    let sql3 = "SELECT * FROM exemplaire WHERE isbn = ?";
+                    let exemplairesResults = await pool.query(sql3, [isbn]);
+                    let bookExemplaires = exemplairesResults.map(ex => new Exemplaire(ex.id_exemplaire, ex.date_achat, ex.isbn, ex.status_exemplaire));
+                            
+                    let livre = new Livre(isbn, results[0].titre, 
+                        new Theme(results[0].code_theme, results[0].libelle, results[0].theme_parent), 
+                        new Editeur(results[0].id_editeur, results[0].nom_editeur, results[0].ville),
+                        results[0].nb_pages, results[0].annee_parution, bookAuteurs, bookExemplaires ); 
+                    return livre;
+                }catch(err){ console.log("DB ERROR : LivreDAO.findLivreByIsbn 1: " + err); throw err; }
+            } catch(err){ console.log("DB ERROR : LivreDAO.findLivreByIsbn 2: " + err); throw err; }          
+        } catch(err){ console.log("DB ERROR : LivreDAO.findLivreByIsbn 3: " + err); throw err; }
     },
 
     insertLivre: async function(livre){

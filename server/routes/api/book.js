@@ -4,6 +4,7 @@ var ThemeDAO = require('../../dao/ThemeDAO');
 var EditeurDAO = require('../../dao/EditeurDAO');
 var LivreDAO = require('../../dao/LivreDAO');
 var AuteurLivreDAO = require('../../dao/AuteurLivreDAO');
+var ExemplaireDAO = require('../../dao/ExemplaireDAO');
 
 var Theme = require('../../domain/Theme');
 
@@ -30,7 +31,7 @@ router.post('/add', loggedIn, userLevel('GESTIONNAIRE'), (req, res, next) => {
             })
             .catch(err => { res.json({error: "Une erreur est survenue."}); });
         }
-        else{ res.json({livreId:doesLivreExist.isbn}); }
+        else{ console.log("doesLivreExist");console.log(doesLivreExist); res.json({livreId:doesLivreExist.isbn}); }
     })
     .catch(err => { res.json({error: "Une erreur est survenue."}); });
     
@@ -62,18 +63,17 @@ router.get('/loan-history/:bookId', loggedIn, (req, res, next) => {
 });
 
 //PROTECTED GESTIONNAIRE DE FONDS
-router.post('/add-exemplaire/:bookId', loggedIn, userLevel('GESTIONNAIRE'), (req, res, next) => {
-    res.json({data:'add-exemplaire book'});
-});
-
-//PROTECTED GESTIONNAIRE DE FONDS
-router.post('/update-exemplaire/:exemplaireId', loggedIn, userLevel('GESTIONNAIRE'), (req, res, next) => {
-    res.json({data:'add-exemplaire book'});
+router.get('/add-exemplaire/:bookId', loggedIn, userLevel('GESTIONNAIRE'), (req, res, next) => {
+    ExemplaireDAO.insertExemplaire(req.params.bookId)
+    .then(id => res.json({success: true}))
+    .catch(err => res.json({success: false}));
 });
 
 //PROTECTED GESTIONNAIRE DE FONDS
 router.get('/delete-exemplaire/:exemplaireId', loggedIn, userLevel('GESTIONNAIRE'), (req, res, next) => {
-    res.json({data:'delete exemplaire book'});
+    ExemplaireDAO.deleteExemplaire(req.params.exemplaireId)
+    .then(id => res.json({success: true}))
+    .catch(err => res.json({success: false}));
 });
 
 //PROTECTED GESTIONNAIRE DE FONDS

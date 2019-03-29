@@ -3,7 +3,7 @@ import Axios from 'axios';
 import { Redirect } from 'react-router-dom';
 
 import ErrorMessage from '../../../../ReusableComponents/ErrorComponents/ErrorMessage';
-
+import UtilisateurInfos from '../../Utilisateur/UtilisateurInfos';
 
 class ShowAdherent extends React.Component{
     constructor(props){
@@ -74,30 +74,9 @@ class ShowAdherent extends React.Component{
         return (
             <div>
                 <h3 style={{marginBottom:"50px"}}>Adhérent:</h3>
-                <div className="row" style={{fontSize:"1.2em"}}>
-                    <div className="col-md-6">
-                        <p>Nom: {this.state.user.nom}</p>
-                    </div>
-                    <div className="col-md-6">
-                        <p>Prénom: {this.state.user.prenom}</p>
-                    </div>
-                    
-                    <div className="col-md-6">
-                        <p>Date de naissance: {new Date(this.state.user.dob).toLocaleDateString('fr-FR', options)}</p>
-                    </div>
-                    <div className="col-md-6">
-                        <p>Sexe: {this.state.user.sexe}</p>
-                    </div>
-                    <div className="col-md-12">
-                        <p>Pseudo: {this.state.user.pseudo}</p>
-                    </div>
-                    <div className="col-md-6">
-                        <p>Téléphone: {this.state.user.telephone}</p>
-                    </div>
-                    <div className="col-md-6">
-                        <p>Date de paiement cotisation: {new Date(this.state.user.dateCotisation).toLocaleDateString('fr-FR', options)}</p>
-                    </div>
-                </div>
+
+                {this.state.user && <UtilisateurInfos user={this.state.user}/>}
+                
                 <div style={{textAlign: "right", padding:"30px"}}>
                     <button type="button" className="btn btn-primary" style={{marginRight:"20px"}} onClick={this.handleUpdateCotisation}>Renouveler la cotisation</button>
                     <button type="button" className="btn btn-warning" style={{marginRight:"20px"}} onClick={this.handleUpdate}>Modifier</button>

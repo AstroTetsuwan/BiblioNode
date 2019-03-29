@@ -72,7 +72,7 @@ class AddLivre extends React.Component{
     handleSubmit(e){        
         let livre = this.buildBookToPost();
         axios.post('/api/book/add', livre)
-        .then(bookID => this.setState({redirect: "/livre/show/" + bookID}))
+        .then(response => this.setState({redirect: "/livre/show/" + response.data.livreId}))
         .catch(error => this.setState({error: error}));
         e.preventDefault();
     }

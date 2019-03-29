@@ -10,9 +10,12 @@ import SearchAdherent from './Adherent/SearchAdherent/SearchAdherent';
 import UpdateAdherent from './Adherent/UpdateAdherent/UpdateAdherent';
 import DeleteAdherent from './Adherent/DeleteAdherent/DeleteAdherent';
 
+import AddPret from './PretsEtRetours/AddPret';
+
+
+
 import AddTheme from './Livres/AddTheme/AddTheme';
 import AddEditeur from './Livres/AddEditeur/AddEditeur';
-
 import AddLivre from './Livres/AddLivre/AddLivre';
 import ShowLivre from './Livres/ShowLivre/ShowLivre';
 
@@ -44,6 +47,8 @@ class Main extends React.Component{
                             <Route path="/adherent/search" render={(props) => <SearchAdherent {...props}  user={this.props.user}/>}/>
                             <Route path="/adherent/update/:id" component={UpdateAdherent}/>}/>
                             <Route path="/adherent/delete/:id" component={DeleteAdherent}/>}/>
+
+                            <Route path="/pret/add" component={AddPret}/> 
 
                             <Route path="/theme/add" component={AddTheme}/>  
                             <Route path="/editeur/add" component={AddEditeur}/>  

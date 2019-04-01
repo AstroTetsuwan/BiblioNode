@@ -37,6 +37,7 @@ router.get('/find/:id', loggedIn, (req, res, next) => {
     UtilisateurDAO.findById(req.params.id)
     .then((user) => {
         user.password = "";
+        //recup ses emprunts avant d'envoyer
         res.json({user: user});
     })
     .catch((err) => {

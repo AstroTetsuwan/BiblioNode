@@ -3,7 +3,9 @@ var pool = require('../db/db').getPool();
 var AdherentGeneralDAO = {
     findAdherentGeneral: async function(){
         try{
-            return await pool.query('SELECT * FROM  adherent_general');
+            let results =  await pool.query('SELECT * FROM  adherent_general');
+            console.log(results);
+            return results[0];
         }
         catch(err){
             console.log("DB ERROR AdherentGeneralDAO.findAdherentGeneral: " + err);

@@ -13,14 +13,14 @@ CREATE TABLE adherent (
 	id_utilisateur INT PRIMARY KEY,
 	telephone VARCHAR(16) NOT NULL,
 	date_cotisation DATE NOT NULL,
-    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) 
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE employe (
 	id_utilisateur INT PRIMARY KEY,
 	matricule VARCHAR(15) NOT NULL UNIQUE,
 	categorie_employe VARCHAR(15) NOT NULL CHECK (categorie_employe in ('BIBLIOTHECAIRE' , 'RESPONSABLE' , 'GESTIONNAIRE')),
-    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) 
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE ON UPDATE CASCADE 
 );
 
 CREATE TABLE auteur (
@@ -56,8 +56,8 @@ CREATE TABLE livre (
 	annee_parution SMALLINT NOT NULL CHECK (annee_parution > 0),
 	nb_pages SMALLINT NOT NULL CHECK (nb_pages >=0),
 	cover_image VARCHAR(50),
-    FOREIGN KEY (id_editeur) REFERENCES editeur(id_editeur) ,
-    FOREIGN KEY (code_theme) REFERENCES theme(code_theme)
+    FOREIGN KEY (id_editeur) REFERENCES editeur(id_editeur) ON UPDATE CASCADE ,
+    FOREIGN KEY (code_theme) REFERENCES theme(code_theme) ON UPDATE CASCADE
 );
 
 CREATE TABLE auteur_livre (
@@ -65,8 +65,8 @@ CREATE TABLE auteur_livre (
 	id_auteur INT NOT NULL,
 	ordre_auteur TINYINT CHECK(ordre_auteur > 0),
 	PRIMARY KEY(isbn, id_auteur),
-    FOREIGN KEY (isbn) REFERENCES livre(isbn),
-    FOREIGN KEY (id_auteur) REFERENCES auteur(id_auteur)
+    FOREIGN KEY (isbn) REFERENCES livre(isbn) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (id_auteur) REFERENCES auteur(id_auteur) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE exemplaire (
@@ -74,7 +74,7 @@ CREATE TABLE exemplaire (
 	date_achat DATE NOT NULL,
 	status_exemplaire VARCHAR(15) NOT NULL CHECK (status_exemplaire in ('PRETE' , 'DISPONIBLE', 'SUPPRIME')),
 	isbn VARCHAR(16) NOT NULL,
-    FOREIGN KEY (isbn) REFERENCES livre(isbn)
+    FOREIGN KEY (isbn) REFERENCES livre(isbn)  ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE emprunt_archive (
@@ -83,14 +83,14 @@ CREATE TABLE emprunt_archive (
 	date_restitution_eff DATE NOT NULL,
 	id_exemplaire INT NOT NULL,
 	id_utilisateur INT NOT NULL,
-    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) ,
-    FOREIGN KEY (id_exemplaire) REFERENCES exemplaire(id_exemplaire) 
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur)  ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (id_exemplaire) REFERENCES exemplaire(id_exemplaire)  ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 CREATE TABLE emprunt_en_cours (
 	id_exemplaire INT PRIMARY KEY,
 	id_utilisateur INT NOT NULL,
 	date_emprunt DATE NOT NULL,
-    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) ,
-    FOREIGN KEY (id_exemplaire) REFERENCES exemplaire(id_exemplaire) 
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (id_exemplaire) REFERENCES exemplaire(id_exemplaire) ON DELETE CASCADE ON UPDATE CASCADE
 );

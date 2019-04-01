@@ -4,7 +4,8 @@ var EmpruntEnCours = require('../domain/EmpruntEnCours');
 var EmpruntEnCoursDAO = {
     insertEmpruntEnCours: async function(emprunt){
         try{
-            let results = await pool.query('INSERT INTO emprunt_en_cours (id_exemplaire, id_utilisateur, date_emprunt) VALUES (?,?,?)');
+            let results = await pool.query('INSERT INTO emprunt_en_cours (id_exemplaire, id_utilisateur, date_emprunt) VALUES (?,?,?)', 
+                [emprunt.idExemplaire, emprunt.idUtilisateur, emprunt.dateEmprunt]);
             return results.insertId;
         }catch(err){
             console.log("DB ERROR EmpruntEnCoursDAO.insertEmpruntEnCours: " + err);
@@ -15,7 +16,9 @@ var EmpruntEnCoursDAO = {
     findEmpruntEnCoursByUtilisateur: async function(userId){
         try{
             let results = await pool.query('SELECT * FROM emprunt_en_cours WHERE id_utilisateur = ?', [userId]);
-            return results.length > 0 ? results.map(emp => new EmpruntEnCours(emp.date_emprunt, emp.id_exemplaire, emp.id_utilisateur)) : false;
+            console.log("EMPRUNTS UTILISATEUR");
+            console.log(results);
+            return results.length > 0 ? results.map(emp => new EmpruntEnCours(emp.date_emprunt, emp.id_exemplaire, emp.id_utilisateur)) : [];
         }catch(err){
             console.log("DB ERROR EmpruntEnCoursDAO.findEmpruntEnCoursByUtilisateur: " + err);
             return false;

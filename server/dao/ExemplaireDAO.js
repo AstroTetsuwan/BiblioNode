@@ -45,6 +45,11 @@ var ExemplaireDAO = {
             console.log("DB ERROR : ExemplaireDAO.deleteExemplaire : " + err);
             throw err;
         }
+    },
+
+    updateStatus: async(id, status) => {
+        let results = await pool.query('UPDATE exemplaire SET status_exemplaire = ? WHERE id_exemplaire = ?', [status, id]);
+        return true;
     }
 
 }

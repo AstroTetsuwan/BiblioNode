@@ -8,14 +8,14 @@ var EmpruntEnCoursDAO = require('../../dao/EmpruntEnCoursDAO');
 var AdherentGeneralDAO = require('../../dao/AdherentGeneralDAO');
 var EmpruntArchiveDAO = require('../../dao/EmpruntArchiveDAO');
 
-router.get('/find/:id', loggedIn,(req, res, next) => {
+router.get('/find/:id', loggedIn, (req, res, next) => {
     UtilisateurDAO.findById(req.params.id)
     .then((user) => {
         user.password = "";
         EmpruntEnCoursDAO.findEmpruntEnCoursByUtilisateur(user.id)
         .then(emprunts => {
            if(emprunts.length > 0){ user.emprunts = emprunts;}
-            res.json({user: user});
+            res.json({user: user});            
         })
         .catch(err => DBErrorManager(err, req, res, next));
     })
@@ -34,11 +34,8 @@ router.post('/emprunt/add', loggedIn, (req, res, next) => {
             else{
                 if(user.categorieUtilisateur === 'EMPLOYE'){
                     EmpruntEnCoursDAO.insertEmpruntEnCours({idExemplaire: idExemplaire, idUtilisateur: user.id, dateEmprunt: new Date()})
-                    .then(idEmprunt => {
-                        ExemplaireDAO.updateStatus(idExemplaire, 'PRETE')
-                        .then( success => res.json({success: true}))
-                        .catch(err => res.status(400).json({error: "Une erreur est survenue."}));
-                    })
+                    .then(idEmprunt => { return ExemplaireDAO.updateStatus(idExemplaire, 'PRETE') })
+                    .then(success => res.json({success: true}))
                     .catch(err => res.status(400).json({error: "Une erreur est survenue."}));
                 } else {
                     AdherentGeneralDAO.findAdherentGeneral()
@@ -47,9 +44,7 @@ router.post('/emprunt/add', loggedIn, (req, res, next) => {
                         .then(userEmprunts => {
                             let isLate = false; 
                             userEmprunts.forEach(e => {
-                                let limit = new Date(e.dateEmprunt);
-                                limit.setDate(limit.getDate() + rules.duree_max_prets);
-                                if(limit < new Date()){isLate = true;}
+                                isLate = new Date(e.dateEmprunt).setDate(new Date(e.dateEmprunt).getDate() + rules.duree_max_prets) < new Date() ? true : false;
                             });
                             if(isLate){ res.status(400).json({error: "L'adhérent a un ou des emprunts en retard."}) }
                             else if(userEmprunts.length > rules.nb_max_prets - 1){
@@ -64,9 +59,7 @@ router.post('/emprunt/add', loggedIn, (req, res, next) => {
                                 .catch(err => res.status(400).json({error: "Une erreur est survenue en insérant l'emprunt."}));
                             }
                         })
-                        .catch(err => {
-                            res.status(400).json({error: "Une erreur est survenue en récupérant les emprunts utilisateur."})
-                        });
+                        .catch(err =>  res.status(400).json({error: "Une erreur est survenue en récupérant les emprunts utilisateur."}));
                     })                   
                     .catch(err => res.status(400).json({error: "Une erreur est survenue en récupérant les règles."}));
                 }
@@ -76,28 +69,17 @@ router.post('/emprunt/add', loggedIn, (req, res, next) => {
     .catch(err => DBErrorManager(err, req, res, next));    
 });
 
-router.post('/emprunt/retour', loggedIn, (req, res, next) => {
+router.post('/emprunt/retour', loggedIn, (req, res, next) => { 
     let idExemplaire = req.body.idExemplaire;
     ExemplaireDAO.updateStatus(idExemplaire, 'DISPONIBLE')
-    .then(success => {
-        EmpruntEnCoursDAO.findEmpruntEnCoursByExemplaire(idExemplaire)
-        .then(empruntEnCours => {
-            console.log('----------------------')
-            console.log(empruntEnCours);
-            console.log('----------------------')
-            EmpruntEnCoursDAO.deleteEmpruntEnCours(idExemplaire)
-            .then(success => {
-                EmpruntArchiveDAO.insert({
-                    dateEmprunt: empruntEnCours.dateEmprunt, dateRestitution: new Date(), idExemplaire: idExemplaire, idUtilisateur: empruntEnCours.idUtilisateur
-                })
-                .then(success => res.json({success: success}))
-                .catch(err => {console.log("ERREUR ARCHIVE INSERT"); console.log(err);DBErrorManager(err, req, res, next)});
-            })
-            .catch(err => {console.log("ERREUR DELETE EMPRUNT");DBErrorManager(err, req, res, next)});
-        })       
-        .catch(err => {console.log("ERREUR FIND EMPRUNT");DBErrorManager(err, req, res, next)});
-    })
-    .catch(err => {console.log("ERREUR UPDATE EXEMPLAIRE"); console.log(err);DBErrorManager(err, req, res, next)});
+    .then(success => { return EmpruntEnCoursDAO.findEmpruntEnCoursByExemplaire(idExemplaire) })
+    .then(eec => {
+        EmpruntEnCoursDAO.deleteEmpruntEnCours(idExemplaire)
+        .then(success => {
+            EmpruntArchiveDAO.insert({dateEmprunt: eec.dateEmprunt, dateRestitution: new Date(), idExemplaire: idExemplaire, idUtilisateur: eec.idUtilisateur })
+            .then(success => res.json({success: success})).catch(err => DBErrorManager(err, req, res, next));
+        }).catch(err => DBErrorManager(err, req, res, next));
+    }).catch(err => DBErrorManager(err, req, res, next));
 });
 
 module.exports = router;

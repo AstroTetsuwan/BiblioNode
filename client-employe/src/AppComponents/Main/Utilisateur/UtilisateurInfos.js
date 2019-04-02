@@ -6,6 +6,7 @@ function UtilisateurInfos(props){
     console.log(props);
     return(
         <div className="row" style={{fontSize:"1.2em"}}>
+                    <div className="col-xs-12">Identifiant utilisateur: {props.user.id}</div>
                     <div className="col-md-6">
                         <p>Nom: {props.user.nom}</p>
                     </div>

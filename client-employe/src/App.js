@@ -32,7 +32,7 @@ class App extends Component {
     .catch((err) => {
       console.log("FAILURE loggedin REQUEST");
       console.log(err.response);
-      if(window.location.href !== 'http://localhost:3000/') { window.location.replace('http://localhost:3000/'); }
+      if(window.location.href !== 'http://192.168.101.133:3000/') { window.location.replace('http://192.168.101.133:3000/'); }
     });
   }
 

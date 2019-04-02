@@ -28,16 +28,16 @@ var EmpruntEnCoursDAO = {
     findEmpruntEnCoursByExemplaire: async function(exId){
         try{
             let results = await pool.query('SELECT * FROM emprunt_en_cours WHERE id_exemplaire = ?', [exId]);
-            return results.length > 0 ? results.map(emp => new EmpruntEnCours(emp.date_emprunt, emp.id_exemplaire, emp.id_utilisateur)) : false;
+            return results.length === 1 ? new EmpruntEnCours(results[0].date_emprunt, results[0].id_exemplaire, results[0].id_utilisateur) : [];
         }catch(err){
             console.log("DB ERROR EmpruntEnCoursDAO.findEmpruntEnCoursByExemplaire: " + err);
             return false;
         } 
     },
 
-    deleteEmpruntEnCours: async function(userId, exId){
+    deleteEmpruntEnCours: async function(exId){
         try{
-            let results = await pool.query('DELETE FROM emprunt_en_cours WHERE id_exemplaire = ? AND id_utilisateur = ?', [exId, userId]);
+            let results = await pool.query('DELETE FROM emprunt_en_cours WHERE id_exemplaire = ?', [exId]);
             return true;
         }catch(err){
             console.log("DB ERROR EmpruntEnCoursDAO.deleteEmpruntEnCours: " + err);

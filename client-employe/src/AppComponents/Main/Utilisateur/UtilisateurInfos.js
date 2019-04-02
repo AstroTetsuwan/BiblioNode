@@ -3,6 +3,7 @@ import React from 'react';
 
 function UtilisateurInfos(props){
     var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    console.log(props);
     return(
         <div className="row" style={{fontSize:"1.2em"}}>
                     <div className="col-md-6">
@@ -41,6 +42,23 @@ function UtilisateurInfos(props){
                         </div>
                     </div>
                 }
+
+                <div className="col-xs-12" style={{borderTop: "1px solid #ddd"}}>
+                    <h4>Emprunts:</h4>
+
+                    {!props.user.emprunts &&
+                        <p>L'utilisateur n'a aucun emprunt en cours.</p>
+                    }
+
+                    {props.user.emprunts && props.user.emprunts.length > 0 &&
+                        <div>
+                            {props.user.emprunts.map(emp => 
+                            <p>Date emprunt: {new Date(emp.dateEmprunt).toLocaleDateString('fr-FR', options)} - Identifiant exemplaire: {emp.idExemplaire}</p>)
+                            }
+                        </div>
+                    }
+
+                </div>
         </div>
     );
 }

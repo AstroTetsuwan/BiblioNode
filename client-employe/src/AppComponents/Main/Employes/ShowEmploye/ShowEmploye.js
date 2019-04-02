@@ -18,7 +18,7 @@ class ShowEmploye extends React.Component{
         this.handleDelete = this.handleDelete.bind(this);
     }
     componentDidMount(){
-        Axios.get('/api/employe/find/' + this.props.match.params.id)
+        Axios.get('/api/utilisateur/find/' + this.props.match.params.id)
         .then((response) => {
             this.setState({user: response.data.user, error: false, redirectUpdate: false});
         })

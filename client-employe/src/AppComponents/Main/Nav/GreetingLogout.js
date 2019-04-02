@@ -17,7 +17,7 @@ class GreetingLogout extends React.Component{
             window.alert(response.data.message);
             
             //React router Redirect won't work, found no other options -> Will need to be changed to 'http://localhost:5000/employe' when server will serve build
-            window.location.replace('http://localhost:3000'); 
+            window.location.replace('http://192.168.101.133:3000'); 
         })
         .catch((err) => {
             console.log(err);

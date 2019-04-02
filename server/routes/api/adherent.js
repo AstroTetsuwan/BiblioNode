@@ -33,18 +33,6 @@ router.get('/delete/:id', loggedIn, userLevel('RESPONSABLE'), (req, res, next) =
     .catch(err => DBErrorManager(err, req, res, next));
 });
 
-router.get('/find/:id', loggedIn, (req, res, next) => {
-    UtilisateurDAO.findById(req.params.id)
-    .then((user) => {
-        user.password = "";
-        //recup ses emprunts avant d'envoyer
-        res.json({user: user});
-    })
-    .catch((err) => {
-        console.log(err);
-        res.status(500).json({error : "Une erreur serveur est survenue."});
-    });
-});
 
 router.get('/search/:keywords/:page', loggedIn, (req, res, next) => {
     let offset = (req.params.page - 1) * 10; // for page 2 -> (2-1) * 10 

@@ -69,14 +69,6 @@ router.get('/delete/:id', loggedIn, userLevel('RESPONSABLE'),(req, res, next) =>
     .catch(err => DBErrorManager(err, req, res, next));
 });
 
-router.get('/find/:id', loggedIn, userLevel('RESPONSABLE'),(req, res, next) => {
-    UtilisateurDAO.findById(req.params.id)
-    .then((user) => {
-        user.password = "";
-        res.json({user: user});
-    })
-    .catch(err => DBErrorManager(err, req, res, next));
-});
 
 router.get('/findAll', loggedIn, userLevel('RESPONSABLE'), (req, res, next) => {
     EmployeDAO.findAll()

@@ -29,7 +29,7 @@ class ShowAdherent extends React.Component{
     }
 
     loadUserData(id){
-        Axios.get('/api/adherent/find/' + id)
+        Axios.get('/api/utilisateur/find/' + id)
             .then((response) => {
                 console.log(response.data.user);
                 this.setState({

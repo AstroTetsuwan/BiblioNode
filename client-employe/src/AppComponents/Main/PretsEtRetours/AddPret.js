@@ -20,8 +20,12 @@ class AddPret extends React.Component{
         this.handleSubmitUser = this.handleSubmitUser.bind(this);
     }
 
-    handleSubmitUser(userid){
-        axios.get('/api/utilisateur/find/' + userid)
+    handleSubmitUser(userId){
+       this.loadUser(userId);
+    }
+
+    loadUser(userId){
+        axios.get('/api/utilisateur/find/' + userId)
         .then(response => this.setState({user: response.data.user}))
         .catch(err => this.setState({error: "Une erreur est survenue"}));
     }
@@ -32,13 +36,15 @@ class AddPret extends React.Component{
             idExemplaire: idExemplaire
         })
         .then(success => this.setState({success: "L'emprunt est enregistré."}, () => {
-            window.setTimeout(() => {this.setState({success: false})}, 3000);
+            window.setTimeout(() => {
+                this.setState({success: false});
+                this.loadUser(this.state.user.id);
+            }, 5000);
         }))
         .catch(err => this.setState({error: err.response.data.error}, () => {
-            window.setTimeout(() => {this.setState({error: false})}, 3000);
+            window.setTimeout(() => {this.setState({error: false})}, 5000);
         }));
 
-        //post user and idExemplaire 'emprunt/add' -> if user can OK -> insert + petit message mignon -> ELSE -> return errorMESSAGE
     }
 
     render(){
